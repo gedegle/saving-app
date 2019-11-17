@@ -5,6 +5,7 @@ import PiggyPic from "../pictures/piggy.png";
 import PiggyPicGrey from "../pictures/piggy-grey.png";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from "axios";
 
 class NewPlan extends Component{
     constructor(props){
@@ -12,28 +13,53 @@ class NewPlan extends Component{
 
         this.state = {
             startDate: new Date(),
-            redirect: false
+            redirect: false,
+            userId: "",
+            redirectHome: false
         }
-        this.handleChange = this.handleChange.bind(this);
-
+        this.handleSumChange = this.handleSumChange.bind(this);
+        this.handleIncomeChange = this.handleIncomeChange.bind(this);
+        this.addPlan = this.addPlan.bind(this);
     }
     componentWillMount() {
-        if(sessionStorage.getItem("userData")){
-            console.log("Call user feed");
-        }
-        else{
+        if(!sessionStorage.getItem("userData"))
             this.setState({redirect: true});
-        }
+    }
+    componentDidMount() {
+        if(sessionStorage.getItem("userData")) this.setState({userId: JSON.parse(sessionStorage.getItem("userData")).id})
     }
 
-    handleChange = date => {
+    addPlan() {
+        axios.post('http://localhost:8000/api/plan', {
+            sum: this.state.sum,
+            income: this.state.income,
+            user_id: this.state.userId,
+            status: true
+        })
+            .then(res =>{
+                this.setState({redirectHome: true})
+            })
+            .catch(error => {
+                console.log(error.response)
+            });
+    }
+
+    handleSumChange (evt){
         this.setState({
-            startDate: date
+            sum: evt.target.value
+        });
+    };
+    handleIncomeChange(evt){
+        this.setState({
+            income: evt.target.value
         });
     };
     render() {
         if(this.state.redirect){
             return (<Redirect to={'/signup'}/>)
+        }
+        if(this.state.redirectHome){
+            return (<Redirect to={'/home'}/>)
         }
 
         return(
@@ -42,33 +68,27 @@ class NewPlan extends Component{
 
                 <div id={"dashboard"}>
                     <div id="choose-plan">
-                        <p id="choose-plan-lbl">Pasirinkite planą</p>
-                        <p className="info-par">Pasirinkus pirmąjį planą galima taupyti be nustatytos datos. </p>
-                        <p className="info-par">Antrasis planas leis pasirinkti datą, iki kurios norima sutaupyti įvestą
-                            pinigų sumą. </p>
+                        <div className="active-plan-sec">
+                            <img className="piggy" src={PiggyPic} style={{width: "90px"}}/>
+                        </div>
+                        <p id="choose-plan-lbl">Suveskite duomenis</p>
+                        <p className="info-par">
+                            Suveskite sumą, kurią norite sutaupyti,
+                            bei apytikslias mėnesines pajamas (be mokesčių),
+                            kad sistema atliktų skaičiavimus.</p>
                         <div className="plans">
-                            <div className="active-plan-sec">
-                                <img className="piggy" src={PiggyPic} style={{width: "75px"}}/>
-                                <p style={{marginTop: 0}}>Pirmas planas</p>
-                            </div>
-                            <div className="plan-sec">
-                                <img className="piggy" src={PiggyPicGrey} style={{width: "75px"}}/>
-                                <p style={{marginTop: 0}}>Antras planas</p>
-                            </div>
                             <div className="parameters">
-                                <p className="lbl-sec">Norima sutaupyti suma </p>
-                                <input className="price-inp-sec" type="number" placeholder="pvz. 55.7"/>
+                                <div className={"frst-block"}>
+                                    <p className="lbl-sec">Norima sutaupyti suma </p>
+                                    <input className="price-inp-sec" type="number" onChange={this.handleSumChange} placeholder="pvz. 55.7"/>
+                                </div>
                                 <div className="scnd-block">
-                                    <p className="lbl-sec scnd-lbl">Iki kada norima sutaupyti</p>
-                                    <DatePicker
-                                        selected={this.state.startDate}
-                                        onChange={this.handleChange}
-                                        id={"datepicker"}
-                                    />
+                                    <p className="lbl-sec">Vidutinės mėnesio pajamos</p>
+                                    <input className="price-inp-sec" type="number" onChange={this.handleIncomeChange} placeholder="pvz. 350"/>
                                 </div>
                             </div>
                         </div>
-                        <div className="submit-plan">Pasirinkti</div>
+                        <button type={"submit"} className="submit-plan" onClick={this.addPlan}>Pasirinkti</button>
                     </div>
                 </div>
             </div>

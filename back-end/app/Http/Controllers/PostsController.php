@@ -30,7 +30,7 @@ class PostsController extends Controller
 
         $post->id = $request->input('id');
         $post->sum = $request->input('sum');
-        $post->dateTill = $request->input('dateTill');
+        $post->type = $request->input('type');
         $post->user_id = $request->input('user_id');
 
         if($post->save()){
