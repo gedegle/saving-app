@@ -4,13 +4,12 @@
 
 use App\Plan;
 use Faker\Generator as Faker;
-use Illuminate\Support\Str;
 
 $factory->define(App\Plan::class, function (Faker $faker) {
     $user_ids = App\User::pluck('id');
     return [
         'sum' => $faker->randomFloat($nbMaxDecimals = NULL, $min = 0, $max = 1000),
-        'dateTill' => now(),
+        'income' => $faker->numberBetween(100,5000),
         'user_id' => $user_ids->random(),
         'status' =>$faker->boolean
     ];

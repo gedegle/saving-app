@@ -854,20 +854,23 @@ input[type=number]::-webkit-outer-spin-button {
 }
 /*!*------------------choose plan-----------*/
 #choose-plan{
-
-    margin-top: 10%;
+	max-width: 520px;
+	margin: auto;
+    margin-top: 7%;
 }
 #choose-plan-lbl{
     text-align: center;
     font-family: 'Muli', sans-serif;
     color: #7045ff;
     margin-bottom: 2%;
+	margin-top:0;
     font-size: 3.68664vw;
 }
 .info-par{
     text-align: center;
+	max-width: 400px;
     color: #929499;
-    margin-top: 0;
+    margin:auto;
     font-size: 0.82291vw;
 }
 .info-par:nth-child(3){
@@ -898,14 +901,13 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .active-plan-sec{
-    display: inline-block;
+	margin: auto;
     border-radius: 1.31666vw;
-    width: 10%;
     text-align: center;
-    padding: 3% 2% 1.7% 2%;
+    padding: 0;
     font-weight: 600;
     font-size: 0.92166vw;
-    border: 0.079vw solid rgba(242, 152, 240, 0.77);
+    //border: 0.079vw solid rgba(242, 152, 240, 0.77);
     color: rgb(242, 152, 240);
     cursor: pointer;
 }
@@ -917,10 +919,11 @@ input[type=number]::-webkit-outer-spin-button {
     content: url("pictures/piggy.png");
 }
 .parameters{
-    display: block;
-    margin-left: 32.5%;
-    margin-top: 2%;
-    width: 35%;
+    display: flex;
+	flex-direction: row;
+	justify-content: center;
+	margin: auto;
+    width: 78%;
     padding-right: 0;
 }
 .lbl-sec{
@@ -929,33 +932,33 @@ input[type=number]::-webkit-outer-spin-button {
     text-align: left;
 }
 .price-inp-sec{
-    display: grid;
-    float: bottom;
     padding: 0.65833vw 0.98749vw;
     border: 1px solid rgba(129, 131, 135, 0.26);
     border-radius: 1.31666vw;
-    width: 38%;
+    max-width: 150px;
     background: url('https://api.iconify.design/ic:twotone-euro.svg?width=15&height=15') no-repeat center right 7% white;
 }
-.scnd-block{
-    display: inline-flex; /*inline-flex*/
-    flex-direction: column;
-    float: right;
-    margin-top: -21.5%;
-}
-.scnd-lbl{
-    display: grid;
-    float: bottom;
+.scnd-block {
+	margin-left: auto;
 }
 .submit-plan{
+	display: flex;
     color: #ffffff;
-    margin-left:58%;
-    margin-top: 2%;
+    justify-content: center;
+	margin: 5% auto 0;
     background-color: #7045ff;
     border-radius: 1.97498vw;
-    width: 4.4108vw;
-    padding: 0.65833vw 1.64582vw;
-    margin-bottom: 5%;
+    max-width: 150px;
+	padding: 10px 18px;
+	font-size: 16px;
+	text-align: center;
+	cursor: pointer;
+}
+.submit-plan:hover {
+	background-color: #5536be;
+}
+.submit-plan:active {
+	background-color: #472b97;
 }
 #datepicker{
     display: grid;
