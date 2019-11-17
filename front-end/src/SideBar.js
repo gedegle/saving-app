@@ -1,0 +1,80 @@
+import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
+import { Icon, InlineIcon } from '@iconify/react';
+import adminSettings from '@iconify/icons-dashicons/admin-settings';
+import plusIcon from '@iconify/icons-dashicons/plus';
+import archiveIcon from '@iconify/icons-fa-solid/archive';
+import piggyBank from '@iconify/icons-fa-solid/piggy-bank';
+import logoutVariant from '@iconify/icons-mdi/logout-variant';
+import userPic from "./pictures/user-pic.jpg";
+
+let newPlanPath = "/new-plan";
+let archivePath = "/archive";
+let mainViewPath = "/home";
+
+function LogOut(){
+    function clearSessionStorage() {
+        sessionStorage.clear();
+        window.location.reload();
+    }
+    return (
+        <div className="logout" type="button" onClick={clearSessionStorage}>
+            <Icon className="iconify log" icon={logoutVariant} />
+            ATSIJUNGTI
+        </div>
+    )
+}
+
+function SideBar() {
+        return (
+            <div id="side-nav">
+            <div className="inside">
+                <div className="top-side-bar">
+                    <div>
+                        <Link to={mainViewPath}>
+                            <span className="saving-lbl">TAUPYKLĖ</span>
+                        </Link>
+                        <img id="user-photo" src={userPic} alt="picture of the user"/>
+                    </div>
+                </div>
+                <div className="lign"/>
+
+                <div id="plans">
+                    <div className="plan active-plan">
+                        <Icon className="iconify" id={"ic-pink"} icon={piggyBank} />
+                        <span className="euro">&euro;</span><span>250</span>
+                    </div>
+                    <div className="plan">
+                        <Icon className="iconify" icon={piggyBank} />
+                        <span className="euro">&euro;</span><span>550</span>
+                    </div>
+                    <div className="plan">
+                        <Icon className="iconify" icon={piggyBank} />
+                        <span className="euro">&euro;</span><span>50</span>
+                    </div>
+                </div>
+                <div className="btn-group">
+                    <Link to={newPlanPath}>
+                        <div className="btn-side add-plan" type="button">
+                            <Icon className="iconify sett" icon={plusIcon} />
+                            Naujas planas
+                        </div>
+                    </Link>
+                    <Link to={archivePath}>
+                        <div className="btn-side archive" type="button">
+                            <Icon className="iconify sett arch" icon={archiveIcon} />
+                            Archyvas
+                        </div>
+                    </Link>
+                    <div className="btn-side settings" type="button">
+                        <Icon className="iconify sett conf" icon={adminSettings} />
+                        Nustatymai
+                    </div>
+                </div>
+                <LogOut />
+            </div>
+        </div>
+    )
+}
+
+export default SideBar;
