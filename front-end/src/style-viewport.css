@@ -74,7 +74,7 @@ input, select{
 	background-color: rgba(242, 152, 240, 0.16);
 	max-width: 85%;
 	border-radius: 0.65833vw;
-	margin-top: 2%;
+
 	padding: 1.31666vw 0 1.31666vw 0.65833vw;
 	font-weight: bold;
 	font-size: 1.57999vw;
@@ -95,18 +95,23 @@ input, select{
 	margin-right: 8%;
 
 }
-.active-plan{
+#plans > li:first-child{
 	background-color: rgba(112, 69, 255, 0.29);
 	border-radius: 0.65833vw;
 	margin-top: 10%;
 	padding: 1.31666vw 0 1.31666vw 0.65833vw;
 	color: #46484c;
+	cursor: default;
 }
-.active-plan::after{
+#plans > li:first-child::after{
 	content: url('https://api.iconify.design/dashicons:arrow-right-alt2.svg?color=%23818387&height=20');
 	vertical-align: -0.13167vw;
 	float: right;
 	margin-right: 8%;
+}
+
+#plans > li:first-child .iconify{
+	color: #7045ff;
 
 }
 .active-plan:hover::after{
@@ -121,12 +126,9 @@ input, select{
 	color: #f298f0;
 
 }
-#ic-pink{
-	color: #7045ff;
-}
 .btn-group{
 	display: inline-block;
-	margin-top: 15%;
+	margin-top: 2%;
 	white-space: normal;
 	width: 17.77485vw;
 }
@@ -339,10 +341,10 @@ input, select{
 
 }
 
-.circle-wrap .circle .mask.full,
+/*.circle-wrap .circle .mask.full,
 .circle-wrap .circle .fill {
 	animation: fill ease-in-out 3s;
-	transform: rotate(45deg);
+	!*transform: rotate(0deg);*!
 }
 
 @keyframes fill {
@@ -350,9 +352,9 @@ input, select{
 		transform: rotate(0deg);
 	}
 	100% {
-		transform: rotate(45deg);
+		!*transform: rotate(0deg);*!
 	}
-}
+}*/
 
 .circle-wrap .inside-circle {
 	width: 19.74984vw;
@@ -734,9 +736,6 @@ h2{
 	margin-bottom: 10%;
 	color: #929499;
 }
-.categ-icons-active{
-	color: #7045ff;
-}
 
 .categ-lbl{
 	font-size: 0.65833vw;
@@ -758,6 +757,9 @@ h2{
 	border: 0.09875vw solid #7045ff;
 	color: #7045ff ;
 }
+.categ-grid-active .categ-icons {
+	color: #7045ff;
+}
 .categ-grid:hover .categ-icons{
 	color: #7045ff;
 }
@@ -774,12 +776,14 @@ input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+.wrapper-categories{
+	margin-bottom: 2%;
+}
 .categ-things{
 	display: flex;
     flex-wrap: wrap;
 	width: 97%;
-	margin-top: 2%;
-    margin-bottom: 4%;
+
 }
 .categ-thing{
 	display: inline-grid;
@@ -821,6 +825,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .categ-thing-active{
     color: #7045ff;
+}
+.price-wrapper{
+	margin-top: 4%;
 }
 .price-lbl{
     margin-left: 2%;
@@ -880,6 +887,13 @@ input[type=number]::-webkit-outer-spin-button {
 .plans{
     margin:0 auto;
     text-align: center;
+}
+#plans li {
+	list-style-type: none;
+	margin-bottom: 3%;
+}
+#plans {
+	padding-left:0;
 }
 .plan-sec{
     display: inline-block;

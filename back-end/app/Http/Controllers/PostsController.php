@@ -17,6 +17,15 @@ class PostsController extends Controller
 
         return PostResource::collection($posts);
     }
+    public function indexAll()
+    {
+        //get post
+        $posts = Post::paginate(10000000000);
+
+        //return collection of post as a resource
+
+        return PostResource::collection($posts);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -30,8 +39,10 @@ class PostsController extends Controller
 
         $post->id = $request->input('id');
         $post->sum = $request->input('sum');
+        $post->date = $request->input('date');
         $post->type = $request->input('type');
         $post->user_id = $request->input('user_id');
+        $post->plan_id = $request->input('plan_id');
 
         if($post->save()){
             return new PostResource($post);

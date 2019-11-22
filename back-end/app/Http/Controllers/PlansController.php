@@ -22,6 +22,15 @@ class PlansController extends Controller
 
         return PlanResource::collection($plans);
     }
+    public function indexAll()
+    {
+        //get post
+        $plans = Plan::paginate(100000000);
+
+        //return collection of post as a resource
+
+        return PlanResource::collection($plans);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -65,6 +74,14 @@ class PlansController extends Controller
     {
         //get post
         $plan = Plan::findOrFail($id);
+
+        //return single post as a resource
+        return new PlanResource($plan);
+    }
+    public function showByUser($user_id)
+    {
+        //get post
+        $plan = Plan::findOrFail($user_id);
 
         //return single post as a resource
         return new PlanResource($plan);

@@ -16,7 +16,7 @@ class Post extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'type', 'sum'
+        'date', 'sum', 'user_id','plan_id', 'type'
     ];
 
     /**

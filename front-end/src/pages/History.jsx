@@ -29,7 +29,7 @@ class History extends Component{
         }
         return (
             <div id={"viewport"}>
-                <SideBar/>
+                <SideBar activePlans={JSON.parse(sessionStorage.getItem("activePlans"))}/>
                 <div className="biggest-bubble">
                 </div>
                 <div id="dashboard">

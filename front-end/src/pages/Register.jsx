@@ -25,13 +25,11 @@ class Register extends Component{
         this.onNameChange = this.onNameChange.bind(this);
         this.signup = this.signup.bind(this);
     }
-    componentWillMount(){
-        document.body.style.backgroundColor = "white";
-    }
     componentWillUnmount(){
         document.body.style.backgroundColor = null;
     }
     componentDidMount() {
+        document.body.style.backgroundColor = "white";
 
         axios.get('http://piggy-bank.com/api/users')
             .then(res =>{
