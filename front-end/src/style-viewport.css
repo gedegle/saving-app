@@ -843,7 +843,8 @@ input[type=number]::-webkit-outer-spin-button {
     background: url('https://api.iconify.design/ic:twotone-euro.svg?width=15&height=15') no-repeat center right 7%;
 }
 .submit-post{
-    display: inline-block;
+	float: right;
+	margin-top: -13.5%;
     color: #ffffff;
     margin-left:13.5%;
     background-color: #7045ff;
@@ -1062,11 +1063,8 @@ th {
 .icon-in-archive{
 	margin-right: 1.05332vw;
 }
-#archive-viewport{
-
-}
-#list-viewport{
-
+.archive-status-icon.archive-status-icon{
+	padding-left: 7%;
 }
 .edit-btn, .remove-btn{
 	color: #7045ff;

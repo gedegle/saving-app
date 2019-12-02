@@ -7,29 +7,115 @@ import pencilIcon from '@iconify/icons-foundation/pencil';
 import fastFoodSharp from '@iconify/icons-ion/fast-food-sharp';
 import trashIcon from '@iconify/icons-si-glyph/trash';
 import foodCroissant from '@iconify/icons-mdi/food-croissant';
+import axios from "axios";
+import {Modal} from "react-bootstrap";
+import ModalNewPost from "../ModalNewPost";
+import ActivePlansSingleton from "../ActivePlansSingleton";
+
+const activePlans = ActivePlansSingleton.getInstance();
+
+
+class DisplayHistoryRows extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            url: 'http://localhost:8000/api/post'
+        }
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSumChange = this.handleSumChange.bind(this);
+    }
+    showModal = e => {
+
+        this.setState({
+            show: !this.state.show
+        });
+    };
+    handleSumChange (evt){
+        this.setState({
+            sum: evt.target.value
+        });
+    };
+    handleSubmit(evt) {
+        axios.put(this.state.url, {
+            id: this.props.id,
+            user_id: JSON.parse(sessionStorage.getItem("userData").id),
+            date: this.state.date,
+            sum: this.state.sum,
+            plan_id: JSON.parse(sessionStorage.getItem("thisPlanId")),
+            type: this.state.type
+        })
+            .then(res =>{
+                this.setState({redirectHome: true})
+                window.location.reload();
+            })
+            .catch(error => {
+                console.log(error.response)
+            });
+    }
+    render() {
+        return (
+            <tr>
+                <td>
+                    <span style={{verticalAlign: "1rem"}}>{this.props.type}</span>
+                </td>
+                <td>{this.props.price.toFixed(2)}<span className="euro">&euro;</span></td>
+                <td>{this.props.date}</td>
+                <td>
+                    <Icon className="edit-btn toggle-button" id="centered-toggle-button"
+                          onClick={e => {
+                              this.showModal(e);
+                          }} icon={pencilIcon} />
+                    <Modal className={"modal"} onHide={this.showModal} animation={false} onClose={this.showModal} show={this.state.show} autoFocus={false}>
+                        <Modal.Body  id="hide-this">
+                            <div variant="link" onClick={this.showModal} className="exit"/>
+                            <div className="adding-line">
+                                <ModalNewPost getSumInput={this.handleSumChange}/>
+                                <div onClick={this.handleSubmit} type={"submit"} className="submit-post">Pridėti</div>
+                            </div>
+                        </Modal.Body>
+                    </Modal>
+                    <span style={{borderLeft: "1px solid #dee2e6", padding: "1.5em 0 1.5em 0.7em", marginLeft: "0.5em"}}/>
+                    <Icon className="remove-btn" icon={trashIcon} />
+                </td>
+            </tr>
+        )
+    }
+}
 
 class History extends Component{
     constructor(props){
         super(props);
         this.state = {
-            redirect: false
+            redirect: false,
+            url: 'http://localhost:8000/api/posts'
         }
     }
-    componentWillMount() {
-        if(sessionStorage.getItem("userData")){
-            console.log("Call user feed");
-        }
+    componentDidMount() {
+        if(!sessionStorage.getItem("userData")) this.setState({redirect: true});
         else{
-            this.setState({redirect: true});
+            let tempArr = [];
+            axios.get(this.state.url)
+                .then(res =>{
+                    res.data.data.forEach((x)=>{
+                        if(x.plan_id == JSON.parse(sessionStorage.getItem("thisPlanId"))) tempArr.push(x);
+                    })
+                    this.setState({
+                        history: tempArr
+                    })
+                })
+                .catch(error => {
+                    console.log(error.response)
+                });
         }
     }
+
     render() {
         if(this.state.redirect){
             return (<Redirect to={'/signup'}/>)
         }
         return (
             <div id={"viewport"}>
-                <SideBar activePlans={JSON.parse(sessionStorage.getItem("activePlans"))}/>
+                <SideBar activePlans={activePlans.getPlans()}/>
                 <div className="biggest-bubble">
                 </div>
                 <div id="dashboard">
@@ -49,44 +135,9 @@ class History extends Component{
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <Icon  className="iconify list-cat-icon" icon={meatOnBone} />
-                                        <span style={{verticalAlign: "1rem"}}>Maisto produktai</span>
-                                    </td>
-                                    <td>5.89 <span className="euro">&euro;</span></td>
-                                    <td>28/10/2019</td>
-                                    <td>
-                                        <Icon className="edit-btn" icon={pencilIcon} />
-                                        <span style={{borderLeft: "1px solid #dee2e6", padding: "1.5em 0 1.5em 0.7em"}}/>
-                                        <Icon className="remove-btn" icon={trashIcon} />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <Icon className="iconify list-cat-icon" icon={fastFoodSharp} />
-                                        <span style={{verticalAlign: "1rem"}}>Greitas maistas</span></td>
-                                    <td>5.89 <span className="euro">&euro;</span></td>
-                                    <td>28/10/2019</td>
-                                    <td>
-                                        <Icon className="edit-btn" icon={pencilIcon} />
-                                        <span style={{borderLeft: "1px solid #dee2e6", padding: "1.5em 0 1.5em 0.7em"}}/>
-                                        <Icon className="remove-btn" icon={trashIcon} />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <Icon className="iconify list-cat-icon" icon={foodCroissant} />
-                                        <span style={{verticalAlign: "1rem"}}>Saldumynai</span>
-                                    </td>
-                                    <td>5.89 <span className="euro">&euro;</span></td>
-                                    <td>28/10/2019</td>
-                                    <td>
-                                        <Icon className="edit-btn" icon={pencilIcon} />
-                                        <span style={{borderLeft: "1px solid #dee2e6", padding: "1.5em 0 1.5em 0.7em"}}/>
-                                        <Icon className="remove-btn" icon={trashIcon} />
-                                    </td>
-                                </tr>
+                                {this.state.history && this.state.history.map((item)=>(
+                                    <DisplayHistoryRows type={item.type} price={item.sum} date={item.date}/>
+                                ))}
                                 </tbody>
                             </table>
                         </div>

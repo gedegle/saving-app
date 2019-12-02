@@ -20,6 +20,7 @@ class CreatePlansTable extends Migration
             $table->bigInteger('user_id')->unsigned()->index();
             $table->timestamps();
             $table->boolean('status');
+            $table->boolean('if_saved');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
 

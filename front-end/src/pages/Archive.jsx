@@ -5,29 +5,69 @@ import { Icon, InlineIcon } from '@iconify/react';
 import piggyBank from '@iconify/icons-fa-solid/piggy-bank';
 import checkIcon from '@iconify/icons-foundation/check';
 import xIcon from '@iconify/icons-foundation/x';
+import axios from "axios";
+import ActivePlansSingleton from "../ActivePlansSingleton";
+import IconProxy from "../IconProxy";
+
+var iconProxy = new IconProxy();
+
+const activePlans =ActivePlansSingleton.getInstance();
+
+function DisplayArchiveRows(props){
+    return (
+        <tr>
+            <td>
+                <span className="plan plan-in-archive">
+                    <Icon className="iconify icon-in-archive" icon={piggyBank} />
+                    <span className="euro">&euro;</span>
+                    <span style={{marginRight: '0.5em'}}>{props.sum}</span>
+				</span>
+            </td>
+            <td>{props.edited}</td>
+            <td className={"archive-status-icon"}>
+                {iconProxy.getIcon(props.ifSaved)}
+            </td>
+        </tr>
+    )
+}
 
 class Archive extends Component{
     constructor(props){
         super(props);
         this.state = {
-            redirect: false
+            redirect: false,
+            url: 'http://localhost:8000/api/plans'
         }
     }
-    componentWillMount() {
-        if(sessionStorage.getItem("userData")){
-            console.log("Call user feed");
+    componentDidMount() {
+        if(!sessionStorage.getItem("userData")) this.setState({redirect: true});
+        else {
+            let tempArr = [];
+            axios.get(this.state.url)
+                .then(res =>{
+                    res.data.data.forEach((x)=>{
+                        if(x.user_id == JSON.parse(sessionStorage.getItem("userData")).id){
+                            if(x.status == 0) tempArr.push(x);
+                        }
+                    })
+                    this.setState({
+                        archive: tempArr
+                    })
+                })
+                .catch(error => {
+                    console.log(error.response)
+                });
         }
-        else{
-            this.setState({redirect: true});
-        }
+
     }
+
     render(){
         if(this.state.redirect){
             return (<Redirect to={'/signup'}/>)
         }
         return(
             <div id={"viewport"}>
-                <SideBar activePlans={JSON.parse(sessionStorage.getItem("activePlans"))}/>
+                <SideBar activePlans={activePlans.getPlans()}/>
                 <div className="biggest-bubble">
                 </div>
                 <div id="dashboard">
@@ -41,54 +81,14 @@ class Archive extends Component{
                                 <thead className="thead-light">
                                 <tr>
                                     <th scope="col">Planas</th>
-                                    <th scope="col">Plano rūšis</th>
                                     <th scope="col">Užšaldyta</th>
                                     <th scope="col">Ar sutaupyta?</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-								<span className="plan plan-in-archive">
-                                     <Icon className="iconify icon-in-archive" icon={piggyBank} />
-                                     <span className="euro">&euro;</span>
-                                     <span style={{marginRight: '0.5em'}}>550</span>
-								</span>
-                                    </td>
-                                    <td>Pirmas planas</td>
-                                    <td>28/10/2019</td>
-                                    <td>
-                                        <Icon icon={checkIcon} color="#00cf95" width="2em" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span className="plan plan-in-archive">
-									        <Icon className="iconify icon-in-archive" icon={piggyBank} />
-                                            <span className="euro">&euro;</span>
-                                            <span style={{marginRight: '0.5em'}}>223</span>
-								        </span>
-                                    </td>
-                                        <td>Antras planas</td>
-                                        <td>28/10/2019</td>
-                                        <td>
-                                            <Icon icon={xIcon} color="#CF2E00" width="2em" />
-                                        </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span className="plan plan-in-archive">
-									        <Icon className="iconify icon-in-archive" icon={piggyBank} />
-                                            <span className="euro">&euro;</span>
-                                            <span style={{marginRight: '0.5em'}}>50</span>
-								        </span>
-                                    </td>
-                                        <td>Antras planas</td>
-                                        <td>28/10/2019</td>
-                                        <td>
-                                            <Icon icon={checkIcon} color="#00cf95" width="2em" />
-                                        </td>
-                                </tr>
+                                {this.state.archive && this.state.archive.map((item)=>(
+                                    <DisplayArchiveRows sum={item.sum} edited={item.updated_at} ifSaved={item.if_saved}/>
+                                ))}
                                 </tbody>
                             </table>
                         </div>

@@ -11,6 +11,7 @@ $factory->define(App\Plan::class, function (Faker $faker) {
         'sum' => $faker->randomFloat($nbMaxDecimals = NULL, $min = 0, $max = 1000),
         'income' => $faker->numberBetween(100,5000),
         'user_id' => $user_ids->random(),
-        'status' =>$faker->boolean
+        'status' =>$faker->boolean,
+        'if_saved' =>$faker->boolean
     ];
 });

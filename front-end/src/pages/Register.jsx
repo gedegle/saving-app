@@ -31,13 +31,14 @@ class Register extends Component{
     componentDidMount() {
         document.body.style.backgroundColor = "white";
 
-        axios.get('http://piggy-bank.com/api/users')
+        /*axios.get('http://piggy-bank.com/api/users')
             .then(res =>{
-                this.setState({allUsers: res.data.data});
+                console.log("Nuskaityta")
+               // this.setState({allUsers: res.data.data});
             })
             .catch(error => {
                 console.log(error.response)
-            });
+            });*/
     }
     signup(){
         if(this.state.name && (this.state.password === this.state.password2) && this.state.email) {
