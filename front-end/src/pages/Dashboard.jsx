@@ -89,8 +89,8 @@ class ReturnActivePlan extends Component{
         super(props);
         this.state = {
             posts:"",
-            saved: 0,
-            degrees: 0
+            saved: null,
+            degrees: null
 
         }
         this.CalculateSavings = this.CalculateSavings.bind(this);
@@ -188,12 +188,11 @@ class ReturnActivePlan extends Component{
             saved = 0;
         }
         leftToSave = sum - saved;
-
         this.setState({
             saved: saved,
             leftToSave: leftToSave,
             degrees: saved*180/sum,
-            daysToSave: daysToSave
+            daysToSave: moment().add(daysToSave, 'days').format('YYYY-MM-DD')
         })
 
     }
@@ -212,11 +211,18 @@ class ReturnActivePlan extends Component{
                             </div>
                             <div className="inside-circle">
                                 <div className="piggy-bank">
-                                    <Icon className="iconify" id="piggy-dash" icon={piggyBank} />
-                                    <span id="saved">Sutaupyta</span>
-                                    <h2 id="saved-money"><span className="euro">&euro;</span>{this.state.saved}</h2>
-                                    <p className="to-save">Liko sutaupyti: <span
-                                        className="euro">&euro;</span>{this.state.leftToSave}</p>
+                                    <div className={"wrapper-saved-dash"}>
+                                        <Icon className="iconify" id="piggy-dash" icon={piggyBank} />
+                                        <span id="saved">Sutaupyta</span>
+                                    </div>
+                                    <h2 id="saved-money"><span className="euro">&euro;</span>{this.state.saved ? this.state.saved : "Loading"}</h2>
+                                    <div className={"save-content"}>
+                                        <p className="to-save">Liko: <span
+                                            className="euro">&euro;</span>{this.state.leftToSave ? this.state.leftToSave : "Loading"}
+                                        </p>
+                                        <p className={"date-to-save-lbl"}>Numatoma sutaupymo data: </p>
+                                        <p className={"date-to-save"}>{this.state.daysToSave ? this.state.daysToSave : "Loading"}</p>
+                                    </div>
                                     <AddNew planId={this.props.id} userId={this.props.userId} />
                                 </div>
                             </div>

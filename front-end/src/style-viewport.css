@@ -373,7 +373,7 @@ input, select{
 #saved-money{
 	font-size: 4em;
 	font-weight: 900;
-	margin-top: -25%;
+	margin-top: -30%;
 }
 h3{
 	color:#eeeeee;
@@ -386,6 +386,10 @@ h3{
 	color: #00cf95;
 	vertical-align: -0.32916vw;
 }
+.wrapper-saved-dash {
+	margin-top: -5%;
+	margin-bottom: 5%;
+}
 #saved{
 	color: #00cf95;
 	font-weight: 600;
@@ -396,9 +400,22 @@ h3{
 	margin-top: 10%;
 	margin-bottom: 0;
 }
-.to-save{
-	margin-top: -18%;
+.save-content{
+	max-height: 100px;
 	color: #929499;
+}
+.to-save{
+	margin: -27% 0 0 0;
+	height: 30px;
+}
+.date-to-save-lbl {
+	margin: 0;
+	height: 30px;
+}
+.date-to-save{
+	margin:0;
+	height: 30px;
+
 }
 .add-new{
 	position: absolute;
