@@ -15,7 +15,92 @@ import ActivePlansSingleton from "../ActivePlansSingleton";
 const activePlans = ActivePlansSingleton.getInstance();
 
 const historyPath = "/history";
+class CalculateExpenses extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            url: 'http://localhost:8000/api/posts-all'
+        }
+        this.biggestExpenses = this.biggestExpenses.bind(this);
+    }
+    componentDidMount() {
+        if(!sessionStorage.getItem("userData")) this.setState({redirect: true});
+        else{
+            let tempArr = [];
+            axios.get(this.state.url)
+                .then(res =>{
+                    res.data.data.forEach((x)=>{
+                        if(x.plan_id == JSON.parse(sessionStorage.getItem("thisPlanId"))) tempArr.push(x);
+                    })
+                    this.setState({
+                        posts: tempArr
+                    })
 
+                    this.biggestExpenses(tempArr);
+                })
+                .catch(error => {
+                    console.log(error.response)
+                });
+        }
+    }
+
+    biggestExpenses(x) {
+        let result = x.reduce((c, v) => {
+            c[v.type] = v.sum + (c[v.type] || 0) ;
+            return c;
+        }, {});
+
+        let maxName1 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+        let maxSum1 = result[maxName1];
+
+        delete result[maxName1];
+        let maxName2 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+        let maxSum2 = result[maxName2];
+
+        delete result[maxName2];
+        let maxName3 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+        let maxSum3 = result[maxName3];
+
+        this.setState({
+            maxSum1: maxSum1,
+            maxName1 : maxName1,
+            maxSum2: maxSum2,
+            maxName2 : maxName2,
+            maxSum3: maxSum3,
+            maxName3 : maxName3
+        })
+
+
+    }
+    render() {
+        return (
+            <div className="top-expenses">
+                <div>
+                    <div id="big-bubble">
+                        <div className="number-row" id="first-row">1</div>
+                        <div className="expenses-labels">{this.state.maxName1}</div>
+                        <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum1}</div>
+                    </div>
+                </div>
+                <div>
+                    <div id="small-bubble">
+                        <div className="number-row" id="second-row">2</div>
+                        <div className="expenses-labels">{this.state.maxName2}</div>
+                        <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum2}</div>
+                    </div>
+                </div>
+                <div>
+                    <div id="smaller-bubble">
+                        <div className="number-row" id="third-row">3</div>
+                        <div className="expenses-labels">{this.state.maxName3}</div>
+                        <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum3}</div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+}
 class AddNew extends Component{
     constructor(props){
         super(props);
@@ -319,6 +404,7 @@ class Dashboard extends Component{
                                 </div>
                             </div>
                             <ReturnActivePlan UserPlans={this.state.UserPlans} id={this.state.id} userId={this.state.userId} activePlans={this.state.activePlans}/>
+                           <CalculateExpenses />
                             <div>
                                 <div className="emit-offer">
                                     <div id="rec-label">Rekomenduojama atsisakyti</div>
@@ -377,29 +463,7 @@ class Dashboard extends Component{
                                     </div>
                                 </div>
                             </div>
-                            <div className="top-expenses">
-                                <div>
-                                    <div id="big-bubble">
-                                        <div className="number-row" id="first-row">1</div>
-                                        <div className="expenses-labels">Maisto produktai</div>
-                                        <div className="expenses-sum"><span className="euro">&euro;</span>50</div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div id="small-bubble">
-                                        <div className="number-row" id="second-row">2</div>
-                                        <div className="expenses-labels">Drabužiai</div>
-                                        <div className="expenses-sum"><span className="euro">&euro;</span>30</div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div id="smaller-bubble">
-                                        <div className="number-row" id="third-row">3</div>
-                                        <div className="expenses-labels">Greitas maistas</div>
-                                        <div className="expenses-sum"><span className="euro">&euro;</span>10</div>
-                                    </div>
-                                </div>
-                            </div>
+                           <CalculateExpenses />
                         </div>
                     </div>
                 </div>
