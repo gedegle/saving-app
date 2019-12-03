@@ -29,7 +29,7 @@ class Login extends Component{
 
     login(){
         if(this.state.password && this.state.email) {
-            axios.post('http://piggy-bank.com/api/login', {
+            axios.post('http://localhost:8000/api/login', {
                 password: this.state.password,
                 email: this.state.email
             })

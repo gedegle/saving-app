@@ -15,7 +15,7 @@ class Plan extends Model
      * @var array
      */
     protected $fillable = [
-        'income', 'sum'
+        'income', 'sum', 'status', 'if_saved'
     ];
 
     /**

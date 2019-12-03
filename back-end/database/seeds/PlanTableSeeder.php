@@ -1,5 +1,6 @@
 <?php
 
+use App\Plan;
 use Illuminate\Database\Seeder;
 
 class PlanTableSeeder extends Seeder

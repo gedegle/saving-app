@@ -6,6 +6,9 @@ import PiggyPicGrey from "../pictures/piggy-grey.png";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
+import ActivePlansSingleton from "../ActivePlansSingleton";
+
+const activePlans =ActivePlansSingleton.getInstance();
 
 class NewPlan extends Component{
     constructor(props){
@@ -17,8 +20,7 @@ class NewPlan extends Component{
             userId: "",
             redirectHome: false
         }
-        this.handleSumChange = this.handleSumChange.bind(this);
-        this.handleIncomeChange = this.handleIncomeChange.bind(this);
+
         this.addPlan = this.addPlan.bind(this);
     }
     componentWillMount() {
@@ -44,16 +46,6 @@ class NewPlan extends Component{
             });
     }
 
-    handleSumChange (evt){
-        this.setState({
-            sum: evt.target.value
-        });
-    };
-    handleIncomeChange(evt){
-        this.setState({
-            income: evt.target.value
-        });
-    };
     render() {
         if(this.state.redirect){
             return (<Redirect to={'/signup'}/>)
@@ -64,8 +56,7 @@ class NewPlan extends Component{
 
         return(
             <div id={"viewport"}>
-                <SideBar/>
-
+                <SideBar activePlans={activePlans.getPlans()}/>
                 <div id={"dashboard"}>
                     <div id="choose-plan">
                         <div className="active-plan-sec">

@@ -23,6 +23,15 @@ class UsersController extends Controller
 
         return UserResource::collection($users);
     }
+    public function indexAll()
+    {
+        //get users
+        $users = User::paginate(100000000);
+
+        //return collection of users as a resource
+
+        return UserResource::collection($users);
+    }
 
     /**
      * Store a newly created resource in storage.

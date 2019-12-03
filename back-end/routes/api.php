@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 //List users
 Route::get('users','UsersController@index');
+Route::get('users-all','UsersController@indexAll');
 
 //List single user
 Route::get('user/{id}','UsersController@show');
@@ -35,9 +36,10 @@ Route::delete('user/{id}','UsersController@destroy');
 
 //List plans
 Route::get('plans','PlansController@index');
+Route::get('plans-all','PlansController@indexAll');
 
 //List single plan
-Route::get('plan/{id}','PlansController@show');
+Route::get('plan/{user_id}','PlansController@showByUser');
 
 //create new plan
 Route::post('plan','PlansController@store');
@@ -46,6 +48,7 @@ Route::post('plan','PlansController@store');
 
 //List posts
 Route::get('posts','PostsController@index');
+Route::get('posts-all','PostsController@indexAll');
 
 //List single post
 Route::get('post/{id}','PostsController@show');

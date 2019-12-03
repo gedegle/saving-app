@@ -24,8 +24,15 @@ function LogOut(){
         </div>
     )
 }
-
-function SideBar() {
+function ReturnActivePlans(props){
+    return (
+        <li className="plan">
+            <Icon className="iconify" icon={piggyBank} />
+            <span className="euro">&euro;</span><span>{props.sum}</span>
+        </li>
+    )
+}
+function SideBar(props) {
         return (
             <div id="side-nav">
             <div className="inside">
@@ -38,21 +45,11 @@ function SideBar() {
                     </div>
                 </div>
                 <div className="lign"/>
-
-                <div id="plans">
-                    <div className="plan active-plan">
-                        <Icon className="iconify" id={"ic-pink"} icon={piggyBank} />
-                        <span className="euro">&euro;</span><span>250</span>
-                    </div>
-                    <div className="plan">
-                        <Icon className="iconify" icon={piggyBank} />
-                        <span className="euro">&euro;</span><span>550</span>
-                    </div>
-                    <div className="plan">
-                        <Icon className="iconify" icon={piggyBank} />
-                        <span className="euro">&euro;</span><span>50</span>
-                    </div>
-                </div>
+                <ul id="plans">
+                    {props.activePlans && props.activePlans.length > 0 && props.activePlans.map((item)=>(
+                        <ReturnActivePlans sum={item.sum} id={item.id}/>
+                    ))}
+                </ul>
                 <div className="btn-group">
                     <Link to={newPlanPath}>
                         <div className="btn-side add-plan" type="button">
@@ -74,6 +71,7 @@ function SideBar() {
                 <LogOut />
             </div>
         </div>
+
     )
 }
 
