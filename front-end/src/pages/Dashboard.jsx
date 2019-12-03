@@ -14,6 +14,44 @@ import ActivePlansSingleton from "../ActivePlansSingleton";
 const activePlans = ActivePlansSingleton.getInstance();
 
 const historyPath = "/history";
+
+function ReturnCalendar() {
+    moment.locale('LT');
+    var startOfWeek = moment().startOf('isoWeek');
+    var endOfWeek = moment().endOf('isoWeek');
+    var today = moment().format('D');
+    var days = [];
+    var day = startOfWeek;
+
+    while (day <= endOfWeek) {
+        days.push(day.toDate());
+        day = day.clone().add(1, 'd');
+    }
+    days.forEach((x)=>{
+        x.toString().replace('Mon','Pr')
+    })
+    console.log(days)
+    return(
+        <div className="calnd">
+            <div className="cal-lbl">Kalendorius</div>
+            <div className="calendar">
+                {days && days.map((d)=>(
+                    <div>
+                    {today === moment(d).format('d') ?
+                        <div className="day active-day">
+                            <div className="day-name">{moment(d).locale('LT').format('ddd')}</div>
+                            <div className="day-numb" id="sekmd">{moment(d).format('D')}</div>
+                        </div> :
+                        <div className="day">
+                            <div className="day-name">{moment(d).locale('LT').format('ddd')}</div>
+                            <div className="day-numb" id="sekmd">{moment(d).format('D')}</div>
+                        </div>}
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
 class CalculateEmitOffer extends Component{
     constructor(props) {
         super(props);
@@ -475,53 +513,7 @@ class Dashboard extends Component{
                             <ReturnActivePlan UserPlans={this.state.UserPlans} id={this.state.id} userId={this.state.userId} activePlans={this.state.activePlans}/>
                             <div>
                                 <CalculateEmitOffer />
-                                <div className="calnd">
-                                    <div className="cal-lbl">Kalendorius</div>
-                                    <div className="calendar">
-                                        <div className="day">
-                                            <div className="day-name">Pr</div>
-                                            <div className="day-numb" id="pirmd">
-                                                7
-                                            </div>
-                                        </div>
-                                        <div className="day">
-                                            <div className="day-name">A</div>
-                                            <div className="day-numb" id="antrd">
-                                                8
-                                            </div>
-                                        </div>
-                                        <div className="day day-filled">
-                                            <div className="day-name">T</div>
-                                            <div className="day-numb" id="trecd">
-                                                9
-                                            </div>
-                                        </div>
-                                        <div className="day">
-                                            <div className="day-name">K</div>
-                                            <div className="day-numb" id="ketvd">
-                                                10
-                                            </div>
-                                        </div>
-                                        <div className="day">
-                                            <div className="day-name">Pn</div>
-                                            <div className="day-numb" id="penktd">
-                                                11
-                                            </div>
-                                        </div>
-                                        <div className="day day-filled">
-                                            <div className="day-name">Š</div>
-                                            <div className="day-numb" id="sestd">
-                                                12
-                                            </div>
-                                        </div>
-                                        <div className="day active-day">
-                                            <div className="day-name">S</div>
-                                            <div className="day-numb active" id="sekmd">
-                                                13
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <ReturnCalendar />
                                 <CalculateExpenses />
                             </div>
 
