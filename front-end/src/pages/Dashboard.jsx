@@ -8,13 +8,82 @@ import piggyBank from '@iconify/icons-fa-solid/piggy-bank';
 import { Button, Modal } from 'react-bootstrap';
 import moment, {now} from "moment";
 import axios from "axios";
-import styled, { keyframes, css }  from 'styled-components';
 import ModalNewPost from "../ModalNewPost";
 import ActivePlansSingleton from "../ActivePlansSingleton";
 
 const activePlans = ActivePlansSingleton.getInstance();
 
 const historyPath = "/history";
+class CalculateEmitOffer extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            url: 'http://localhost:8000/api/posts-all'
+        }
+        this.whatToEmit = this.whatToEmit.bind(this);
+    }
+    componentDidMount() {
+        if(!sessionStorage.getItem("userData")) this.setState({redirect: true});
+        else{
+            let tempArr = [];
+            axios.get(this.state.url)
+                .then(res =>{
+                    res.data.data.forEach((x)=>{
+                        if(x.plan_id == JSON.parse(sessionStorage.getItem("thisPlanId"))) tempArr.push(x);
+                    })
+                    this.setState({
+                        posts: tempArr
+                    })
+                    this.whatToEmit(tempArr);
+                })
+                .catch(error => {
+                    console.log(error.response)
+                });
+        }
+    }
+    whatToEmit(x) {
+        let maxName = "";
+        let maxSum = 0;
+        let tempArr = [];
+
+        let result = x.reduce((c, v) => {
+            c[v.type] = v.sum + (c[v.type] || 0) ;
+            return c;
+        }, {});
+
+        for(let i=0; i<5; i++) {
+            maxName = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum = result[maxName];
+            if(maxName === "Pramogos" && maxSum >= 30) tempArr.push(maxName);
+            else if((maxName === "Greitas maistas" || maxName === "Saldumynai" || maxName === "Gaivieji gėrimai") && maxSum >= 20) tempArr.push(maxName);
+            else if(maxName === "Baldai" && maxSum >= 150) tempArr.push(maxName);
+            else if(maxName === "Dekoro prekės" && maxSum >= 80) tempArr.push(maxName);
+            else if(maxName === "Apyvokos prekės" && maxSum >= 30) tempArr.push(maxName);
+            else if(maxName === "Viršutiniai rūbai" && maxSum >= 45) tempArr.push(maxName);
+            else if(maxName === "Avalynė" && maxSum >= 30) tempArr.push(maxName);
+            else if(maxName === "Aksesuarai" && maxSum >= 15) tempArr.push(maxName);
+            else if(maxName === "Nuosavas trans." && maxSum >= 15) tempArr.push(maxName);
+            else if((maxName === "Žaidimų įranga" || maxName === "Video ir audio" || maxName === "Telefoninė įranga" || maxName === "Kompiuterinė įranga") && maxSum >= 100) tempArr.push(maxName);
+            delete result[maxName];
+        }
+        this.setState({
+            emitOffer: tempArr
+        })
+
+    }
+    render() {
+        return (
+            <div className="emit-offer">
+                <div id="rec-label">Rekomenduojama atsisakyti</div>
+                <div className="recommend">
+                    {this.state.emitOffer && this.state.emitOffer.map((item) =>(
+                        <div>{item}</div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+}
 class CalculateExpenses extends Component {
     constructor(props) {
         super(props);
@@ -404,17 +473,8 @@ class Dashboard extends Component{
                                 </div>
                             </div>
                             <ReturnActivePlan UserPlans={this.state.UserPlans} id={this.state.id} userId={this.state.userId} activePlans={this.state.activePlans}/>
-                           <CalculateExpenses />
                             <div>
-                                <div className="emit-offer">
-                                    <div id="rec-label">Rekomenduojama atsisakyti</div>
-                                    <div className="recommend">
-                                        <div><span className="iconify recommend-icons" data-icon="ion:shirt-sharp" data-inline="false"/>Drabužiai
-                                        </div>
-                                        <div><span className="iconify recommend-icons" data-icon="emojione-monotone:candy" data-inline="false"/>Saldumynai
-                                        </div>
-                                    </div>
-                                </div>
+                                <CalculateEmitOffer />
                                 <div className="calnd">
                                     <div className="cal-lbl">Kalendorius</div>
                                     <div className="calendar">
@@ -462,8 +522,9 @@ class Dashboard extends Component{
                                         </div>
                                     </div>
                                 </div>
+                                <CalculateExpenses />
                             </div>
-                           <CalculateExpenses />
+
                         </div>
                     </div>
                 </div>
