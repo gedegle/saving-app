@@ -36,7 +36,7 @@ class Archive extends Component{
         super(props);
         this.state = {
             redirect: false,
-            url: 'http://localhost:8000/api/plans'
+            url: 'http://localhost:8000/api/plans-all'
         }
     }
     componentDidMount() {
@@ -76,7 +76,6 @@ class Archive extends Component{
                             <h3 className="list-h3">Archyvas
                                 <span style={{fontWeight: 400, fontSize: '1rem', marginLeft: '1rem'}}>Visų turėtų planų archyvas</span>
                             </h3>
-
                             <table className="table">
                                 <thead className="thead-light">
                                 <tr>
@@ -85,12 +84,16 @@ class Archive extends Component{
                                     <th scope="col">Ar sutaupyta?</th>
                                 </tr>
                                 </thead>
+                            </table>
+                            <div className={"table-wrapper"}>
+                            <table className="table">
                                 <tbody>
                                 {this.state.archive && this.state.archive.map((item)=>(
                                     <DisplayArchiveRows sum={item.sum} edited={item.updated_at} ifSaved={item.if_saved}/>
                                 ))}
                                 </tbody>
                             </table>
+                            </div>
                         </div>
 
                     </div>

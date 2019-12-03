@@ -25,6 +25,8 @@ class ModalNewPost extends Component{
         this.changeId = this.changeId.bind(this);
         this.changeTypeId = this.changeTypeId.bind(this);
         this.handleSumChange = this.handleSumChange.bind(this);
+        this.handleOnClickType = this.handleOnClickType.bind(this);
+        this.changeType = this.changeType.bind(this);
 
     }
     changeId (x) {
@@ -37,6 +39,24 @@ class ModalNewPost extends Component{
             typeId: x
         })
         sessionStorage.setItem("typeId", x);
+
+    }
+    changeType(x) {
+        let temp;
+        if(x === "entertainment"){
+            temp = "Pramogos"
+        } else if(x === "bills" ){
+            temp = "Mokesčiai"
+        } else temp = "Kita"
+
+        this.setState({
+            typeId: temp
+        });
+        sessionStorage.setItem("typeId", temp);
+    }
+    handleOnClickType(x) {
+        this.changeId(x);
+        this.changeType(x);
     }
     handleSumChange (evt){
         this.setState({
@@ -83,19 +103,19 @@ class ModalNewPost extends Component{
                     </div>
                     <div className={
                         this.state.id && this.state.id === "entertainment" ? 'categ-grid categ-grid-active' : 'categ-grid'
-                    } onClick={()=>this.changeId("entertainment")}>
+                    } onClick={()=>this.handleOnClickType("entertainment")}>
                         <Icon className="iconify categ-icons" icon={buddiconsActivity} />
                         <span id={"pramogos"} className="categ-lbl">Pramogos</span>
                     </div>
                     <div className={
                         this.state.id && this.state.id === "bills" ? 'categ-grid categ-grid-active' : 'categ-grid'
-                    }  onClick={()=>this.changeId("bills")}>
+                    }  onClick={()=>this.handleOnClickType("bills")}>
                         <Icon className="iconify categ-icons" icon={documentsSharp} />
                         <span id={"mokesciai"} className="categ-lbl">Mokesčiai</span>
                     </div>
                     <div className={
                         this.state.id && this.state.id === "other" ? 'categ-grid categ-grid-active' : 'categ-grid'
-                    }  onClick={()=>this.changeId("other")}>
+                    }  onClick={()=>this.handleOnClickType("other")}>
                         <Icon className="iconify categ-icons" icon={outlineMore} />
                         <span id={"kita"} className="categ-lbl">Kita</span>
                     </div>

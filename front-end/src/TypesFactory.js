@@ -124,6 +124,18 @@ const Types =[
                 icon: motorbikeIcon
             }
         ],
+    },
+    {
+        name: "entertainment",
+        types: []
+    },
+    {
+        name: "bills",
+        types: []
+    },
+    {
+        name: "other",
+        types: []
     }
 ];
 

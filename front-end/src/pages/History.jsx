@@ -87,7 +87,7 @@ class History extends Component{
         super(props);
         this.state = {
             redirect: false,
-            url: 'http://localhost:8000/api/posts'
+            url: 'http://localhost:8000/api/posts-all'
         }
     }
     componentDidMount() {
@@ -134,12 +134,16 @@ class History extends Component{
                                     <th scope="col"/>
                                 </tr>
                                 </thead>
+                            </table>
+                            <div className={"table-wrapper"}>
+                            <table className="table">
                                 <tbody>
                                 {this.state.history && this.state.history.map((item)=>(
                                     <DisplayHistoryRows type={item.type} price={item.sum} date={item.date}/>
                                 ))}
                                 </tbody>
                             </table>
+                            </div>
                         </div>
                     </div>
                 </div>

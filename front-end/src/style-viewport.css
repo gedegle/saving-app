@@ -1010,11 +1010,17 @@ input[type=number]::-webkit-outer-spin-button {
 	min-height: 43.8vw;
 	max-height: 43.8vw;
 }
+.table-wrapper{
+	overflow:hidden;
+	overflow-y: scroll;
+	height: 700px;
+}
 .list-h3{
 	color: #66686c;
 }
 table, ::after, ::before {
 	box-sizing: border-box;
+
 }
 .table {
 	display: table;
@@ -1023,6 +1029,7 @@ table, ::after, ::before {
 	color: #212529;
 	border-spacing: 0.13167vw;
 	border-collapse: collapse;
+
 }
 thead {
 	display: table-header-group;
