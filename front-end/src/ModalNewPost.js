@@ -10,9 +10,7 @@ import documentsSharp from "@iconify/icons-ion/documents-sharp";
 import outlineMore from "@iconify/icons-ic/outline-more";
 import React, {Component} from "react";
 import TypesFactory from "./TypesFactory";
-import ClassProxy from "./IconProxy";
 var typesFactory =new TypesFactory();
-var classes =new ClassProxy();
 
 class ModalNewPost extends Component{
     constructor(props) {
@@ -66,7 +64,6 @@ class ModalNewPost extends Component{
 
     render() {
         let typeId =this.state.id;
-        let count =0;
         return (
             <div>
                 <Modal.Title className="category-lbl">Pasirinkite kategoriją</Modal.Title>

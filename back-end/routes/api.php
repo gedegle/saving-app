@@ -43,7 +43,8 @@ Route::get('plan/{user_id}','PlansController@showByUser');
 
 //create new plan
 Route::post('plan','PlansController@store');
-
+//update plan
+Route::put('plan/{id}','PlansController@update');
 
 
 //List posts

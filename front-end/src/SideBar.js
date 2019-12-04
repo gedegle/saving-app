@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Icon, InlineIcon } from '@iconify/react';
+import { Icon } from '@iconify/react';
 import adminSettings from '@iconify/icons-dashicons/admin-settings';
 import plusIcon from '@iconify/icons-dashicons/plus';
 import archiveIcon from '@iconify/icons-fa-solid/archive';
@@ -33,6 +33,8 @@ function ReturnActivePlans(props){
     )
 }
 function SideBar(props) {
+    let activePlans = JSON.parse(sessionStorage.getItem("activePlans"));
+
         return (
             <div id="side-nav">
             <div className="inside">
@@ -41,12 +43,12 @@ function SideBar(props) {
                         <Link to={mainViewPath}>
                             <span className="saving-lbl">TAUPYKLĖ</span>
                         </Link>
-                        <img id="user-photo" src={userPic} alt="picture of the user"/>
+                        <img id="user-photo" src={userPic} alt="user"/>
                     </div>
                 </div>
                 <div className="lign"/>
                 <ul id="plans">
-                    {props.activePlans && props.activePlans.length > 0 && props.activePlans.map((item)=>(
+                    {activePlans && activePlans.length > 0 && activePlans.map((item)=>(
                         <ReturnActivePlans sum={item.sum} id={item.id}/>
                     ))}
                 </ul>

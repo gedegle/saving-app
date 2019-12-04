@@ -5,6 +5,7 @@ body{
 	font-size: 1.05332vw;
 	background-color: #e8eaee;
 	position:relative;
+	overflow-y: hidden;
 }
 html,body{
 	height: 100%;
@@ -452,6 +453,7 @@ h2{
 	position: relative;
 	margin-top: 43%;
 	color:#46484c;
+	height: 100px;
 }
 #rec-label{
 	font-weight: bold;
@@ -471,7 +473,7 @@ h2{
 	position: relative;
 	display: inline-grid;
 	float: right;
-	margin-top: -47%;
+	margin-top: -48%;
 	margin-right:17%;
 	text-align: center;
 	color: #929499;
@@ -629,7 +631,7 @@ h2{
 .calnd{
 	position: relative;
 	margin-left: 45%;
-	margin-top:-2%;
+	margin-top:-1.5%;
 }
 
 .cal-lbl{

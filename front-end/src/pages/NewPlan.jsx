@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import SideBar from "../SideBar";
 import {Redirect} from 'react-router-dom';
 import PiggyPic from "../pictures/piggy.png";
-import PiggyPicGrey from "../pictures/piggy-grey.png";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import ActivePlansSingleton from "../ActivePlansSingleton";
@@ -60,7 +58,7 @@ class NewPlan extends Component{
                 <div id={"dashboard"}>
                     <div id="choose-plan">
                         <div className="active-plan-sec">
-                            <img className="piggy" src={PiggyPic} style={{width: "90px"}}/>
+                            <img alt={"pink piggy"} className="piggy" src={PiggyPic} style={{width: "90px"}}/>
                         </div>
                         <p id="choose-plan-lbl">Suveskite duomenis</p>
                         <p className="info-par">

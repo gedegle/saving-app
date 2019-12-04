@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
 import SideBar from "../SideBar";
 import {Redirect} from 'react-router-dom';
-import { Icon, InlineIcon } from '@iconify/react';
-import meatOnBone from '@iconify/icons-emojione-monotone/meat-on-bone';
+import { Icon } from '@iconify/react';
 import pencilIcon from '@iconify/icons-foundation/pencil';
-import fastFoodSharp from '@iconify/icons-ion/fast-food-sharp';
 import trashIcon from '@iconify/icons-si-glyph/trash';
-import foodCroissant from '@iconify/icons-mdi/food-croissant';
 import axios from "axios";
 import {Modal} from "react-bootstrap";
 import ModalNewPost from "../ModalNewPost";

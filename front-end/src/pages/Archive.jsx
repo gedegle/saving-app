@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
 import SideBar from "../SideBar";
 import {Redirect} from 'react-router-dom';
-import { Icon, InlineIcon } from '@iconify/react';
+import { Icon } from '@iconify/react';
 import piggyBank from '@iconify/icons-fa-solid/piggy-bank';
-import checkIcon from '@iconify/icons-foundation/check';
-import xIcon from '@iconify/icons-foundation/x';
 import axios from "axios";
 import ActivePlansSingleton from "../ActivePlansSingleton";
 import IconProxy from "../IconProxy";

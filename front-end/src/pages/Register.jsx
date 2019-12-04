@@ -87,11 +87,11 @@ class Register extends Component{
         return(
             <div className="viewport" id={"viewportRegister"}>
                 <div className="photo-side">
-                    <img id="back-img" src={PiggyBankPic} className="animated bounce infinite"/>
+                    <img id="back-img" src={PiggyBankPic} alt={"piggy bank"} className="animated bounce infinite"/>
                 </div>
                 <div>
                     <div className="sign-up-side">
-                        <img id="piggy" src={Piggy}/>
+                        <img id="piggy" alt={"pink piggy bank"} src={Piggy}/>
                             <div className="signup-lbl">PRISIJUNK</div>
                             <div className="signup-lbl-smaller">Užsiregistruokite ir pradėkite taupyti</div>
                             <div className="inputs">
