@@ -15,6 +15,7 @@ import Archive from "./Archive";
 const activePlans = ActivePlansSingleton.getInstance();
 
 const historyPath = "/history";
+const statisticsPath = "/statistics";
 
 class ArchivePlan extends Component {
     constructor(props) {
@@ -499,13 +500,14 @@ class Dashboard extends Component{
                             if(x.status === 1) tempArr2.push(x);
                         })
                     }
+                    if(!JSON.parse(sessionStorage.getItem("thisPlanId")) || JSON.parse(sessionStorage.getItem("thisPlanId")) === tempArr2[0].id) sessionStorage.setItem("thisPlanId", tempArr2[0].id);
+
                     this.setState({
                         activePlans: tempArr2,
-                        id: tempArr2[0].id,
+                        id: JSON.parse(sessionStorage.getItem('thisPlanId')),
                         userId: JSON.parse(sessionStorage.getItem('userData')).id
                     })
 
-                    sessionStorage.setItem("thisPlanId", tempArr2[0].id);
 
                     if(tempArr.find(status => status === 0)) this.setState({redirectNewPlan: true});
                     else this.setState({redirectNewPlan: false})
@@ -537,7 +539,9 @@ class Dashboard extends Component{
                             <div>
                                 <div className="top-nav">
                                     <div className="top-btn dash-main active-top-btn">Pagrindinis</div>
-                                    <div className="top-btn stats">Statistika</div>
+                                    <Link to={statisticsPath}>
+                                         <div className="top-btn stats">Statistika</div>
+                                    </Link>
                                     <Link to={historyPath}>
                                         <div className="top-btn history">Istorija</div>
                                     </Link>

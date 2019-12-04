@@ -25,8 +25,13 @@ function LogOut(){
     )
 }
 function ReturnActivePlans(props){
+    function changeThisPlanId(){
+        sessionStorage.setItem("thisPlanId", props.i);
+        window.location.reload();
+
+    }
     return (
-        <li className="plan">
+        <li className={props.class} id={props.i} onClick={changeThisPlanId}>
             <Icon className="iconify" icon={piggyBank} />
             <span className="euro">&euro;</span><span>{props.sum}</span>
         </li>
@@ -41,13 +46,15 @@ function SideBar(props) {
                         <Link to={mainViewPath}>
                             <span className="saving-lbl">TAUPYKLĖ</span>
                         </Link>
-                        <img id="user-photo" src={userPic} alt="user"/>
                     </div>
                 </div>
                 <div className="lign"/>
                 <ul id="plans">
                     {props.activePlans && props.activePlans.length > 0 && props.activePlans.map((item)=>(
-                        <ReturnActivePlans sum={item.sum} id={item.id}/>
+                        <div>
+                        {item.id === JSON.parse(sessionStorage.getItem("thisPlanId")) ? <ReturnActivePlans class={"plan active-plan"} i={item.id} sum={item.sum} id={item.id}/> :
+                                <ReturnActivePlans class={"plan"} i={item.id} sum={item.sum} id={item.id}/>}
+                        </div>
                     ))}
                 </ul>
                 <div className="btn-group">
