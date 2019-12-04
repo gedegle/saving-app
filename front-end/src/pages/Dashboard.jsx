@@ -35,6 +35,7 @@ class ArchivePlan extends Component {
         this.setState({
             planId: sessionStorage.getItem("thisPlanId")
         })
+
     }
     putToArchive() {
         axios.put(this.state.url+ this.state.planId, {
@@ -104,23 +105,24 @@ class CalculateEmitOffer extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            url: 'http://localhost:8000/api/posts-all'
+            url: 'http://localhost:8000/api/posts-all',
         }
-        this.whatToEmit = this.whatToEmit.bind(this);
     }
     componentDidMount() {
-        if(!sessionStorage.getItem("userData")) this.setState({redirect: true});
-        else{
+        if(sessionStorage.getItem("userData"))
+        {
             let tempArr = [];
             axios.get(this.state.url)
                 .then(res =>{
                     res.data.data.forEach((x)=>{
                         if(x.plan_id == JSON.parse(sessionStorage.getItem("thisPlanId"))) tempArr.push(x);
                     })
+                    console.log(tempArr)
+
                     this.setState({
                         posts: tempArr
                     })
-                    this.whatToEmit(tempArr);
+                    this.whatToEmit(this.state.posts);
                 })
                 .catch(error => {
                     console.log(error.response)
@@ -159,14 +161,11 @@ class CalculateEmitOffer extends Component{
     }
     render() {
         return (
-            <div className="emit-offer">
-                <div id="rec-label">Rekomenduojama atsisakyti</div>
                 <div className="recommend">
                     {this.state.emitOffer && this.state.emitOffer.map((item) =>(
                         <div>{item}</div>
                     ))}
                 </div>
-            </div>
         );
     }
 }
@@ -176,7 +175,6 @@ class CalculateExpenses extends Component {
         this.state = {
             url: 'http://localhost:8000/api/posts-all'
         }
-        this.biggestExpenses = this.biggestExpenses.bind(this);
     }
     componentDidMount() {
         if(!sessionStorage.getItem("userData")) this.setState({redirect: true});
@@ -234,21 +232,21 @@ class CalculateExpenses extends Component {
                     <div id="big-bubble">
                         <div className="number-row" id="first-row">1</div>
                         <div className="expenses-labels">{this.state.maxName1}</div>
-                        <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum1}</div>
+                        {this.state.maxName1 ? <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum1}</div> : ''}
                     </div>
                 </div>
                 <div>
                     <div id="small-bubble">
                         <div className="number-row" id="second-row">2</div>
                         <div className="expenses-labels">{this.state.maxName2}</div>
-                        <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum2}</div>
+                        {this.state.maxName1 ? <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum2}</div> : '' }
                     </div>
                 </div>
                 <div>
                     <div id="smaller-bubble">
                         <div className="number-row" id="third-row">3</div>
                         <div className="expenses-labels">{this.state.maxName3}</div>
-                        <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum3}</div>
+                        {this.state.maxName1 ? <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum3}</div> : ''}
                     </div>
                 </div>
             </div>
@@ -476,7 +474,7 @@ class ReturnActivePlan extends Component{
 class Dashboard extends Component{
     constructor(props){
         super(props);
-        console.log(this.userData);
+
         this.state = {
             redirect: false,
             redirectNewPlan : false,
@@ -492,7 +490,6 @@ class Dashboard extends Component{
             axios.get('http://localhost:8000/api/plans-all')
                 .then(res =>{
                     res.data.data.forEach((x)=>{
-                        //console.log(JSON.parse(sessionStorage.getItem('userData')).id)
                         if(x.user_id === JSON.parse(sessionStorage.getItem('userData')).id) tempArr.push(x);
                     })
 
@@ -519,17 +516,7 @@ class Dashboard extends Component{
                 });
         }
     }
- /*   componentDidUpdate(prevProps, prevState, snapshot) {
-        let tempClass = document.getElementsByClassName("plan")[0];
 
-        if(tempClass!==undefined) {
-            let tempId = document.getElementsByClassName("plan")[0].id;
-            if(tempId !== prevState.id)
-                this.setState({
-                    id: tempId
-                })
-        }
-    }*/
 
 
     render(){
@@ -541,7 +528,7 @@ class Dashboard extends Component{
         }
         return(
             <div id={"viewport"}>
-                <SideBar activePlans={activePlans.getPlans()}/>
+                <SideBar activePlans={this.state.activePlans}/>
                 <div className="biggest-bubble">
                 </div>
                 <div id={"dashboard"}>
@@ -559,9 +546,12 @@ class Dashboard extends Component{
                             </div>
                             <ReturnActivePlan UserPlans={this.state.UserPlans} id={this.state.id} userId={this.state.userId} activePlans={this.state.activePlans}/>
                             <div>
-                                <CalculateEmitOffer />
+                                <div className="emit-offer">
+                                    <div id="rec-label">Rekomenduojama atsisakyti</div>
+                                {this.state.id ? <CalculateEmitOffer /> : ''}
+                                </div>
                                 <ReturnCalendar />
-                                <CalculateExpenses />
+                                {this.state.id ? <CalculateExpenses /> : ''}
                             </div>
 
                         </div>

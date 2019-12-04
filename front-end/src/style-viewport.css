@@ -16,9 +16,7 @@ html,body{
 	display: inline-block;
 	overflow: auto;
 }
-.inside{
-	margin-left: 1.25082vw;
-}
+
 .top-side-bar{
 	display: inline-block;
 	vertical-align: center;
@@ -28,11 +26,16 @@ html,body{
 #side-nav{
 	background-color: rgb(249, 252, 255);
 	width: 17.77485vw;
-	float:left;
-	border-radius:0.65833vw;
-	min-height: 45.29296vw;
-	max-height: 45.29296vw;
+	float: left;
+	border-radius: 0.65833vw;
+	height: 45.29296vw;
 
+}
+.inside{
+	margin-left: 1.25082vw;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 #user-photo{
 	width: 2.30415vw;
@@ -96,10 +99,13 @@ input, select{
 	margin-right: 8%;
 
 }
+#plans {
+	margin-top: 0;
+}
 #plans > li:first-child{
 	background-color: rgba(112, 69, 255, 0.29);
 	border-radius: 0.65833vw;
-	margin-top: 10%;
+
 	padding: 1.31666vw 0 1.31666vw 0.65833vw;
 	color: #46484c;
 	cursor: default;
@@ -187,9 +193,13 @@ input, select{
 .btn-side:hover .sett{
 	color: #7045ff;
 }
+.logoutWrapper {
+	display: flex;
+	align-items: flex-end;
+	margin-top: auto;
+	margin-bottom: 5%;
+}
 .logout{
-	display: inline-block;
-	margin-top: 82%;
 	width: 5.26662vw;
 	font-size: 0.63199vw;
 	font-weight: bolder;
@@ -1015,7 +1025,7 @@ input[type=number]::-webkit-outer-spin-button {
 .table-wrapper{
 	overflow:hidden;
 	overflow-y: scroll;
-	height: 700px;
+	height: 650px;
 }
 .list-h3{
 	color: #66686c;
@@ -1031,7 +1041,7 @@ table, ::after, ::before {
 	color: #212529;
 	border-spacing: 0.13167vw;
 	border-collapse: collapse;
-
+	table-layout: fixed;
 }
 thead {
 	display: table-header-group;
@@ -1063,11 +1073,19 @@ th {
 	text-align: left;
 }
 .table th{
+	padding-right: 2vw;
 	padding-left: 2.10665vw;
 }
+.table th:nth-child(5) {
+	width: 0;
+	margin:0;
+	padding:0;
+}
+
 .table td{
 	padding:2.10665vw 0 1.05332vw 2.10665vw;
 }
+
 .plan-in-archive{
 	max-width: 6.31995vw;
 	font-size: 1.05332vw;

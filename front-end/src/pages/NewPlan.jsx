@@ -54,7 +54,7 @@ class NewPlan extends Component{
 
         return(
             <div id={"viewport"}>
-                <SideBar activePlans={activePlans.getPlans()}/>
+                <SideBar activePlans={JSON.parse(sessionStorage.getItem("activePlans"))}/>
                 <div id={"dashboard"}>
                     <div id="choose-plan">
                         <div className="active-plan-sec">

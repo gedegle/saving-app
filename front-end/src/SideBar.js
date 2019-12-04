@@ -33,8 +33,6 @@ function ReturnActivePlans(props){
     )
 }
 function SideBar(props) {
-    let activePlans = JSON.parse(sessionStorage.getItem("activePlans"));
-
         return (
             <div id="side-nav">
             <div className="inside">
@@ -48,7 +46,7 @@ function SideBar(props) {
                 </div>
                 <div className="lign"/>
                 <ul id="plans">
-                    {activePlans && activePlans.length > 0 && activePlans.map((item)=>(
+                    {props.activePlans && props.activePlans.length > 0 && props.activePlans.map((item)=>(
                         <ReturnActivePlans sum={item.sum} id={item.id}/>
                     ))}
                 </ul>
@@ -70,7 +68,9 @@ function SideBar(props) {
                         Nustatymai
                     </div>
                 </div>
+                <div className={"logoutWrapper"}>
                 <LogOut />
+                </div>
             </div>
         </div>
 
