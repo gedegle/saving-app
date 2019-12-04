@@ -19,7 +19,7 @@ function ReturnCalendar() {
     moment.locale('LT');
     var startOfWeek = moment().startOf('isoWeek');
     var endOfWeek = moment().endOf('isoWeek');
-    var today = moment().format('D');
+    var today = moment().format('dd');
     var days = [];
     var day = startOfWeek;
 
@@ -27,24 +27,21 @@ function ReturnCalendar() {
         days.push(day.toDate());
         day = day.clone().add(1, 'd');
     }
-    days.forEach((x)=>{
-        x.toString().replace('Mon','Pr')
-    })
-    console.log(days)
+
     return(
         <div className="calnd">
             <div className="cal-lbl">Kalendorius</div>
             <div className="calendar">
                 {days && days.map((d)=>(
                     <div>
-                    {today === moment(d).format('d') ?
+                    {today === moment(d).format('dd') ?
                         <div className="day active-day">
-                            <div className="day-name">{moment(d).locale('LT').format('ddd')}</div>
-                            <div className="day-numb" id="sekmd">{moment(d).format('D')}</div>
+                            <div className="day-name">{moment(d).locale('LT').format('dd')}</div>
+                            <div className="day-numb">{moment(d).format('D')}</div>
                         </div> :
                         <div className="day">
-                            <div className="day-name">{moment(d).locale('LT').format('ddd')}</div>
-                            <div className="day-numb" id="sekmd">{moment(d).format('D')}</div>
+                            <div className="day-name">{moment(d).locale('LT').format('dd')}</div>
+                            <div className="day-numb">{moment(d).format('D')}</div>
                         </div>}
                     </div>
                 ))}
