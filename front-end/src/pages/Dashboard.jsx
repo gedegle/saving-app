@@ -2,18 +2,104 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import SideBar from "../SideBar";
 import {Redirect} from 'react-router-dom';
-import { Icon, InlineIcon } from '@iconify/react';
+import { Icon } from '@iconify/react';
 import piggyBank from '@iconify/icons-fa-solid/piggy-bank';
 
-import { Button, Modal } from 'react-bootstrap';
-import moment, {now} from "moment";
+import { Modal } from 'react-bootstrap';
+import moment from "moment";
 import axios from "axios";
 import ModalNewPost from "../ModalNewPost";
 import ActivePlansSingleton from "../ActivePlansSingleton";
+import Archive from "./Archive";
 
 const activePlans = ActivePlansSingleton.getInstance();
 
 const historyPath = "/history";
+
+class ArchivePlan extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            url: 'http://localhost:8000/api/plan/',
+            redirectNewPlan: false
+        }
+        this.putToArchive = this.putToArchive.bind(this);
+    }
+
+    componentDidMount() {
+        if(!sessionStorage.getItem("userData")) this.setState({redirect: true});
+        else{
+            if(sessionStorage.getItem("leftToSave") <= 0.5) this.setState({saved: 1});
+            else this.setState({saved: 0});
+        }
+        this.setState({
+            planId: sessionStorage.getItem("thisPlanId")
+        })
+    }
+    putToArchive() {
+        axios.put(this.state.url+ this.state.planId, {
+            status: 0,
+            if_saved: this.state.saved
+        })
+            .then(res =>{
+                if(this.props.activePlans.length < 1) {
+                    this.setState({
+                        redirectNewPlan: true
+                    })
+                }
+                window.location.reload();
+            })
+            .catch(error => {
+                console.log(error.response)
+            });
+
+        sessionStorage.removeItem("activePlans")
+    }
+
+    render() {
+        if(this.state.redirectNewPlan){
+            return (<Redirect to={'/new-plan'}/>)
+        }
+        return (
+            <div className="top-btn archive-dash active-arch-btn" onClick={this.putToArchive}>Archyvuoti planą</div>
+        );
+    }
+}
+
+function ReturnCalendar() {
+    moment.locale('LT');
+    var startOfWeek = moment().startOf('isoWeek');
+    var endOfWeek = moment().endOf('isoWeek');
+    var today = moment().format('dd');
+    var days = [];
+    var day = startOfWeek;
+
+    while (day <= endOfWeek) {
+        days.push(day.toDate());
+        day = day.clone().add(1, 'd');
+    }
+
+    return(
+        <div className="calnd">
+            <div className="cal-lbl">Kalendorius</div>
+            <div className="calendar">
+                {days && days.map((d)=>(
+                    <div>
+                    {today === moment(d).format('dd') ?
+                        <div className="day active-day">
+                            <div className="day-name">{moment(d).locale('LT').format('dd')}</div>
+                            <div className="day-numb">{moment(d).format('D')}</div>
+                        </div> :
+                        <div className="day">
+                            <div className="day-name">{moment(d).locale('LT').format('dd')}</div>
+                            <div className="day-numb">{moment(d).format('D')}</div>
+                        </div>}
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
 class CalculateEmitOffer extends Component{
     constructor(props) {
         super(props);
@@ -332,7 +418,6 @@ class ReturnActivePlan extends Component{
                 daysToSave = tempWhileSum/avgPerDay;
             }
         }
-        console.log(sum)
         if(avgPerMonth<sum) {
             daysToSave = Math.ceil(sum/avgPerMonth);
         } else daysToSave = Math.ceil(daysToSave) + monthCount*30;
@@ -348,6 +433,7 @@ class ReturnActivePlan extends Component{
             degrees: saved*180/sum,
             daysToSave: moment().add(daysToSave, 'days').format('YYYY-MM-DD')
         })
+        sessionStorage.setItem("leftToSave", leftToSave);
 
     }
     render() {
@@ -403,7 +489,6 @@ class Dashboard extends Component{
         if(!sessionStorage.getItem("userData")) this.setState({redirect: true});
         else {
             let tempArr = [], tempArr2 = [];
-            let temp;
             axios.get('http://localhost:8000/api/plans-all')
                 .then(res =>{
                     res.data.data.forEach((x)=>{
@@ -469,59 +554,13 @@ class Dashboard extends Component{
                                     <Link to={historyPath}>
                                         <div className="top-btn history">Istorija</div>
                                     </Link>
-                                    <div className="top-btn archive-dash active-arch-btn">Archyvuoti planą</div>
+                                    <ArchivePlan activePlans={this.state.activePlans} id={this.state.id}/>
                                 </div>
                             </div>
                             <ReturnActivePlan UserPlans={this.state.UserPlans} id={this.state.id} userId={this.state.userId} activePlans={this.state.activePlans}/>
                             <div>
                                 <CalculateEmitOffer />
-                                <div className="calnd">
-                                    <div className="cal-lbl">Kalendorius</div>
-                                    <div className="calendar">
-                                        <div className="day">
-                                            <div className="day-name">Pr</div>
-                                            <div className="day-numb" id="pirmd">
-                                                7
-                                            </div>
-                                        </div>
-                                        <div className="day">
-                                            <div className="day-name">A</div>
-                                            <div className="day-numb" id="antrd">
-                                                8
-                                            </div>
-                                        </div>
-                                        <div className="day day-filled">
-                                            <div className="day-name">T</div>
-                                            <div className="day-numb" id="trecd">
-                                                9
-                                            </div>
-                                        </div>
-                                        <div className="day">
-                                            <div className="day-name">K</div>
-                                            <div className="day-numb" id="ketvd">
-                                                10
-                                            </div>
-                                        </div>
-                                        <div className="day">
-                                            <div className="day-name">Pn</div>
-                                            <div className="day-numb" id="penktd">
-                                                11
-                                            </div>
-                                        </div>
-                                        <div className="day day-filled">
-                                            <div className="day-name">Š</div>
-                                            <div className="day-numb" id="sestd">
-                                                12
-                                            </div>
-                                        </div>
-                                        <div className="day active-day">
-                                            <div className="day-name">S</div>
-                                            <div className="day-numb active" id="sekmd">
-                                                13
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <ReturnCalendar />
                                 <CalculateExpenses />
                             </div>
 

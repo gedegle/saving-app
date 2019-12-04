@@ -6,6 +6,7 @@ use App\Plan;
 use Illuminate\Http\Request;
 use App\Http\Resources\Plan as PlanResource;
 
+
 class PlansController extends Controller
 {
     /**
@@ -57,12 +58,14 @@ class PlansController extends Controller
         $plan->status = $request->input('status');
         $plan->income = $request->input('income');
         $plan->user_id = $request->input('user_id');
+        $plan->if_saved = $request->input('if_saved');
 
         if($plan->save()){
             return new PlanResource($plan);
         }
 
     }
+
 
     /**
      * Display the specified resource.
@@ -95,19 +98,33 @@ class PlansController extends Controller
      */
     public function edit($id)
     {
-        //
+       //
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, $id)
     {
-        //
+        $plan = Plan::findOrFail($id);
+
+        $this->validate($request, [
+            'if_saved' => 'required',
+            'status' => 'required'
+        ]);
+
+        $input = $request->all();
+
+        $plan->fill($input)->save();
+
+        if($plan->save()){
+            return new PlanResource($plan);
+        }
     }
 
     /**

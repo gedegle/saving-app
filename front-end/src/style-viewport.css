@@ -5,6 +5,7 @@ body{
 	font-size: 1.05332vw;
 	background-color: #e8eaee;
 	position:relative;
+	overflow-y: hidden;
 }
 html,body{
 	height: 100%;
@@ -427,7 +428,7 @@ h3{
 	border-radius: 50%;
 	text-align: center;
 	align-items: center;
-	top:35%;
+	top: 68%;
 	left: 97%;
 	font-size: 0.7em;
 	content: url('https://api.iconify.design/dashicons:plus.svg?color=%239061ff&height=20');
@@ -450,8 +451,9 @@ h2{
 }
 .emit-offer{
 	position: relative;
-	margin-top: 40%;
+	margin-top: 43%;
 	color:#46484c;
+	height: 100px;
 }
 #rec-label{
 	font-weight: bold;
@@ -471,7 +473,7 @@ h2{
 	position: relative;
 	display: inline-grid;
 	float: right;
-	margin-top: -47%;
+	margin-top: -48%;
 	margin-right:17%;
 	text-align: center;
 	color: #929499;
@@ -629,7 +631,7 @@ h2{
 .calnd{
 	position: relative;
 	margin-left: 45%;
-	top:-20%;
+	margin-top:-1.5%;
 }
 
 .cal-lbl{
@@ -641,14 +643,14 @@ h2{
 	color:#46484c;
 	border-bottom: 0.13167vw solid rgba(129, 131, 135, 0.26);
 	padding-bottom: 0.94799vw;
-	width:29.62475vw;
+	width:27vw;
 }
 .calendar{
 	margin-top: -14%;
 	position: absolute;
 	display: inline-block;
 	float: left;
-	width: 29.62475vw;
+	width: 30vw;
 	min-width: 6.58328vw;
 	max-width: 29.62475vw;
 	height: 6.58328vw;
@@ -656,11 +658,11 @@ h2{
 }
 .day{
 	float: left;
-	padding:5% 4%;
-	margin:1%;
+	padding:5% 3%;
+	margin: 1%;
 	font-weight: 400;
 	color: #46484c;
-	margin-top:8%;
+	margin-top: 8%;
 }
 .day-numb{
 	margin: 1.97498vw 0 0 0;

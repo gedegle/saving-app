@@ -65,11 +65,11 @@ class Login extends Component{
         return(
             <div className="viewport" id={"viewportRegister"}>
                 <div className="photo-side">
-                    <img id="back-img" src={PiggyBankPic} className="animated bounce infinite"/>
+                    <img id="back-img" src={PiggyBankPic} alt={"piggy bank"} className="animated bounce infinite"/>
                 </div>
                 <div>
                     <div className="sign-up-side">
-                        <img id="piggy" src={Piggy}/>
+                        <img id="piggy" alt={"pink piggy bank"} src={Piggy}/>
                         <div className="signup-lbl" style={{marginBottom: "10%"}}>PRISIJUNK</div>
                         <div className="inputs">
                             <input className="input" type="email" onChange={this.onEmailChange}required placeholder="El. Paštas"/>
