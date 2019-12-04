@@ -10,6 +10,7 @@ import NewPlan from "./pages/NewPlan";
 import History from "./pages/History";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Statistics from "./pages/Statistics";
 
 class App extends Component {
   render(){
@@ -23,6 +24,7 @@ class App extends Component {
             <Route exact path={"/history"} component={History} />
             <Route exact path={"/signup"} component={Register} />
             <Route exact path={"/login"} component={Login} />
+            <Route exact path={"/statistics"} component={Statistics} />
           </Switch>
         </Router>
     )
