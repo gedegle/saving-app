@@ -924,6 +924,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 #plans {
 	padding-left:0;
+	max-height: 500px;
+	overflow-y: scroll;
 }
 .plan-sec{
     display: inline-block;

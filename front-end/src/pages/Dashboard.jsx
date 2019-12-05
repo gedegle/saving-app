@@ -4,13 +4,11 @@ import SideBar from "../SideBar";
 import {Redirect} from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import piggyBank from '@iconify/icons-fa-solid/piggy-bank';
-
 import { Modal } from 'react-bootstrap';
 import moment from "moment";
 import axios from "axios";
 import ModalNewPost from "../ModalNewPost";
 import ActivePlansSingleton from "../ActivePlansSingleton";
-import Archive from "./Archive";
 
 const activePlans = ActivePlansSingleton.getInstance();
 
@@ -500,7 +498,17 @@ class Dashboard extends Component{
                             if(x.status === 1) tempArr2.push(x);
                         })
                     }
-                    if(!JSON.parse(sessionStorage.getItem("thisPlanId")) || JSON.parse(sessionStorage.getItem("thisPlanId")) === tempArr2[0].id) sessionStorage.setItem("thisPlanId", tempArr2[0].id);
+
+                    let find = false;
+                    if(!JSON.parse(sessionStorage.getItem("thisPlanId"))
+                        || JSON.parse(sessionStorage.getItem("thisPlanId")) === tempArr2[0].id )
+                        sessionStorage.setItem("thisPlanId", tempArr2[0].id);
+                    else {
+                        tempArr2.forEach((x)=>{
+                            if(x.id === JSON.parse(sessionStorage.getItem("thisPlanId"))) find = true;
+                        })
+                        if(!find) sessionStorage.setItem("thisPlanId", tempArr2[0].id);
+                    }
 
                     this.setState({
                         activePlans: tempArr2,

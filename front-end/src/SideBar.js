@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import adminSettings from '@iconify/icons-dashicons/admin-settings';
@@ -6,7 +6,7 @@ import plusIcon from '@iconify/icons-dashicons/plus';
 import archiveIcon from '@iconify/icons-fa-solid/archive';
 import piggyBank from '@iconify/icons-fa-solid/piggy-bank';
 import logoutVariant from '@iconify/icons-mdi/logout-variant';
-import userPic from "./pictures/user-pic.jpg";
+import {Redirect} from 'react-router-dom';
 
 let newPlanPath = "/new-plan";
 let archivePath = "/archive";
@@ -24,18 +24,35 @@ function LogOut(){
         </div>
     )
 }
-function ReturnActivePlans(props){
-    function changeThisPlanId(){
-        sessionStorage.setItem("thisPlanId", props.i);
-        window.location.reload();
-
+class ReturnActivePlans extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            redirect: false
+        }
+        this.changeThisPlanId = this.changeThisPlanId.bind(this);
     }
-    return (
-        <li className={props.class} id={props.i} onClick={changeThisPlanId}>
-            <Icon className="iconify" icon={piggyBank} />
-            <span className="euro">&euro;</span><span>{props.sum}</span>
-        </li>
-    )
+    changeThisPlanId(){
+        sessionStorage.setItem("thisPlanId", this.props.i);
+        this.setState({
+            redirect: true
+        })
+    }
+    render() {
+        console.log()
+        if(this.state.redirect) {
+            if (window.location.pathname !== mainViewPath)
+                return <Redirect to={mainViewPath}/>;
+            else window.location.reload();
+        }
+
+        return (
+            <li className={this.props.class} id={this.props.i} onClick={this.changeThisPlanId}>
+                <Icon className="iconify" icon={piggyBank} />
+                <span className="euro">&euro;</span><span>{this.props.sum}</span>
+            </li>
+        )
+    }
 }
 function SideBar(props) {
         return (

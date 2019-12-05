@@ -20,6 +20,8 @@ class NewPlan extends Component{
         }
 
         this.addPlan = this.addPlan.bind(this);
+        this.handleSumChange = this.handleSumChange.bind(this);
+        this.handleIncomeChange = this.handleIncomeChange.bind(this);
     }
     componentWillMount() {
         if(!sessionStorage.getItem("userData"))
@@ -34,6 +36,7 @@ class NewPlan extends Component{
             sum: this.state.sum,
             income: this.state.income,
             user_id: this.state.userId,
+            if_saved: 0,
             status: true
         })
             .then(res =>{
@@ -43,7 +46,17 @@ class NewPlan extends Component{
                 console.log(error.response)
             });
     }
+    handleSumChange(evt) {
+        this.setState({
+            sum: evt.target.value
+        })
+    }
 
+    handleIncomeChange(evt) {
+        this.setState({
+            income: evt.target.value
+        })
+    }
     render() {
         if(this.state.redirect){
             return (<Redirect to={'/signup'}/>)
