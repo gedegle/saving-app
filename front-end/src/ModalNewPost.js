@@ -20,12 +20,13 @@ class ModalNewPost extends Component{
             typeId: null,
             sum: 0
         }
+
         this.changeId = this.changeId.bind(this);
         this.changeTypeId = this.changeTypeId.bind(this);
         this.handleSumChange = this.handleSumChange.bind(this);
         this.handleOnClickType = this.handleOnClickType.bind(this);
         this.changeType = this.changeType.bind(this);
-
+        this.returnSum = this.returnSum.bind(this);
     }
     changeId (x) {
         this.setState({
@@ -35,9 +36,8 @@ class ModalNewPost extends Component{
     changeTypeId(x) {
         this.setState({
             typeId: x
-        })
+        });
         sessionStorage.setItem("typeId", x);
-
     }
     changeType(x) {
         let temp;
@@ -61,6 +61,9 @@ class ModalNewPost extends Component{
             sum: evt.target.value
         });
     };
+    returnSum() {
+        return parseInt(document.getElementById('sum-'+this.props.x).innerText);
+    }
 
     render() {
         let typeId =this.state.id;
@@ -131,7 +134,8 @@ class ModalNewPost extends Component{
                         </div>
                     ))}
                 <div className={"price-wrapper"}><label className="price-lbl">Suma</label></div>
-                <input className="price-inp" type="number" onChange={this.props.getSumInput} placeholder="pvz. 55.7"/>
+                {this.props.x ? <input className="price-inp" type="number" value={this.returnSum()} onChange={this.props.getSumInput}/>
+                : <input className="price-inp" type="number" onChange={this.props.getSumInput} placeholder="pvz. 55.7"/>}
             </div>
         )
     }

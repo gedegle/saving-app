@@ -22,10 +22,10 @@ class DisplayHistoryRows extends Component{
         this.handleSumChange = this.handleSumChange.bind(this);
     }
     showModal = e => {
-
         this.setState({
             show: !this.state.show
         });
+        console.log(e.target)
     };
     handleSumChange (evt){
         this.setState({
@@ -55,10 +55,10 @@ class DisplayHistoryRows extends Component{
                 <td>
                     <span style={{verticalAlign: "1rem"}}>{this.props.type}</span>
                 </td>
-                <td>{this.props.price.toFixed(2)}<span className="euro">&euro;</span></td>
+                <td id={"sum-"+this.props.i}>{this.props.sum.toFixed(2)}<span className="euro">&euro;</span></td>
                 <td>{this.props.date}</td>
                 <td>
-                    <Icon className="edit-btn toggle-button" id="centered-toggle-button"
+                    <Icon className={"edit-btn toggle-button button-"+this.props.i} id="centered-toggle-button"
                           onClick={e => {
                               this.showModal(e);
                           }} icon={pencilIcon} />
@@ -66,10 +66,10 @@ class DisplayHistoryRows extends Component{
                         <Modal.Body  id="hide-this">
                             <div variant="link" onClick={this.showModal} className="exit"/>
                             <div className="adding-line">
-                                <ModalNewPost getSumInput={this.handleSumChange}/>
+                                <ModalNewPost x={this.props.i} getSumInput={this.handleSumChange}/>
                                 <div onClick={this.handleSubmit} type={"submit"} className="submit-post">Pridėti</div>
                             </div>
-                        </Modal.Body>
+                        </Modal.Body>`
                     </Modal>
                     <span style={{borderLeft: "1px solid #dee2e6", padding: "1.5em 0 1.5em 0.7em", marginLeft: "0.5em"}}/>
                     <Icon className="remove-btn" icon={trashIcon} />
@@ -110,9 +110,10 @@ class History extends Component{
         if(this.state.redirect){
             return (<Redirect to={'/signup'}/>)
         }
+        let x = 1;
         return (
             <div id={"viewport"}>
-                <SideBar activePlans={activePlans.getPlans()}/>
+                <SideBar activePlans={JSON.parse(sessionStorage.getItem("activePlans"))}/>
                 <div className="biggest-bubble">
                 </div>
                 <div id="dashboard">
@@ -136,7 +137,7 @@ class History extends Component{
                             <table className="table">
                                 <tbody>
                                 {this.state.history && this.state.history.map((item)=>(
-                                    <DisplayHistoryRows type={item.type} price={item.sum} date={item.date}/>
+                                    <DisplayHistoryRows i={x++} type={item.type} sum={item.sum} date={item.date}/>
                                 ))}
                                 </tbody>
                             </table>

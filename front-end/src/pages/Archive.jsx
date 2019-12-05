@@ -65,7 +65,7 @@ class Archive extends Component{
         }
         return(
             <div id={"viewport"}>
-                <SideBar activePlans={activePlans.getPlans()}/>
+                <SideBar activePlans={JSON.parse(sessionStorage.getItem("activePlans"))}/>
                 <div className="biggest-bubble">
                 </div>
                 <div id="dashboard">
