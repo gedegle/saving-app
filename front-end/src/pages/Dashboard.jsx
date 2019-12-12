@@ -9,11 +9,11 @@ import moment from "moment";
 import axios from "axios";
 import ModalNewPost from "../ModalNewPost";
 import ActivePlansSingleton from "../ActivePlansSingleton";
-
 const activePlans = ActivePlansSingleton.getInstance();
 
 const historyPath = "/history";
 const statisticsPath = "/statistics";
+
 
 class ArchivePlan extends Component {
     constructor(props) {
@@ -452,7 +452,7 @@ class ReturnActivePlan extends Component{
                                         <Icon className="iconify" id="piggy-dash" icon={piggyBank} />
                                         <span id="saved">Sutaupyta</span>
                                     </div>
-                                    <h2 id="saved-money"><span className="euro">&euro;</span>{this.state.saved ? this.state.saved : "Loading"}</h2>
+                                    <h2 id="saved-money"><span className="euro">&euro;</span>{this.state.saved >= 0 ? this.state.saved : "Loading"}</h2>
                                     <div className={"save-content"}>
                                         <p className="to-save">Liko: <span
                                             className="euro">&euro;</span>{this.state.leftToSave ? this.state.leftToSave : "Loading"}
