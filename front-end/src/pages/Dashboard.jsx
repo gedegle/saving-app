@@ -145,25 +145,29 @@ class CalculateEmitOffer extends Component{
         let maxName = "";
         let maxSum = 0;
         let tempArr = [];
+        let length = 0;
 
         let result = x.reduce((c, v) => {
             c[v.type] = v.sum + (c[v.type] || 0) ;
             return c;
         }, {});
 
-        for(let i=0; i<5; i++) {
+        if(x.length > 5) length = 5;
+        else length = x.length;
+
+        for (let i = 0; i < length; i++) {
             maxName = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
             maxSum = result[maxName];
-            if(maxName === "Pramogos" && maxSum >= 30) tempArr.push(maxName);
-            else if((maxName === "Greitas maistas" || maxName === "Saldumynai" || maxName === "Gaivieji gėrimai") && maxSum >= 20) tempArr.push(maxName);
-            else if(maxName === "Baldai" && maxSum >= 150) tempArr.push(maxName);
-            else if(maxName === "Dekoro prekės" && maxSum >= 80) tempArr.push(maxName);
-            else if(maxName === "Apyvokos prekės" && maxSum >= 30) tempArr.push(maxName);
-            else if(maxName === "Viršutiniai rūbai" && maxSum >= 45) tempArr.push(maxName);
-            else if(maxName === "Avalynė" && maxSum >= 30) tempArr.push(maxName);
-            else if(maxName === "Aksesuarai" && maxSum >= 15) tempArr.push(maxName);
-            else if(maxName === "Nuosavas trans." && maxSum >= 15) tempArr.push(maxName);
-            else if((maxName === "Žaidimų įranga" || maxName === "Video ir audio" || maxName === "Telefoninė įranga" || maxName === "Kompiuterinė įranga") && maxSum >= 100) tempArr.push(maxName);
+            if (maxName === "Pramogos" && maxSum >= 30) tempArr.push(maxName);
+            else if ((maxName === "Greitas maistas" || maxName === "Saldumynai" || maxName === "Gaivieji gėrimai") && maxSum >= 20) tempArr.push(maxName);
+            else if (maxName === "Baldai" && maxSum >= 150) tempArr.push(maxName);
+            else if (maxName === "Dekoro prekės" && maxSum >= 80) tempArr.push(maxName);
+            else if (maxName === "Apyvokos prekės" && maxSum >= 30) tempArr.push(maxName);
+            else if (maxName === "Viršutiniai rūbai" && maxSum >= 45) tempArr.push(maxName);
+            else if (maxName === "Avalynė" && maxSum >= 30) tempArr.push(maxName);
+            else if (maxName === "Aksesuarai" && maxSum >= 15) tempArr.push(maxName);
+            else if (maxName === "Nuosavas trans." && maxSum >= 15) tempArr.push(maxName);
+            else if ((maxName === "Žaidimų įranga" || maxName === "Video ir audio" || maxName === "Telefoninė įranga" || maxName === "Kompiuterinė įranga") && maxSum >= 100) tempArr.push(maxName);
             delete result[maxName];
         }
         this.setState({
@@ -210,21 +214,40 @@ class CalculateExpenses extends Component {
     }
 
     biggestExpenses(x) {
+        let maxSum1 = 0,
+            maxSum2 = 0,
+            maxSum3 = 0,
+            maxName1,
+            maxName2,
+            maxName3;
+
         let result = x.reduce((c, v) => {
             c[v.type] = v.sum + (c[v.type] || 0) ;
             return c;
         }, {});
 
-        let maxName1 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
-        let maxSum1 = result[maxName1];
+        if(x.length >= 3) {
+            maxName1 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum1 = result[maxName1];
 
-        delete result[maxName1];
-        let maxName2 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
-        let maxSum2 = result[maxName2];
+            delete result[maxName1];
+            maxName2 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum2 = result[maxName2];
 
-        delete result[maxName2];
-        let maxName3 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
-        let maxSum3 = result[maxName3];
+            delete result[maxName2];
+            maxName3 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum3 = result[maxName3];
+        } else if(x.length = 2) {
+            maxName1 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum1 = result[maxName1];
+
+            delete result[maxName1];
+            maxName2 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum2 = result[maxName2];
+        } else {
+            maxName1 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum1 = result[maxName1];
+        }
 
         this.setState({
             maxSum1: maxSum1,
@@ -251,14 +274,14 @@ class CalculateExpenses extends Component {
                     <div id="small-bubble">
                         <div className="number-row" id="second-row">2</div>
                         <div className="expenses-labels">{this.state.maxName2}</div>
-                        {this.state.maxName1 ? <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum2}</div> : '' }
+                        {this.state.maxName2 ? <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum2}</div> : '' }
                     </div>
                 </div>
                 <div>
                     <div id="smaller-bubble">
                         <div className="number-row" id="third-row">3</div>
                         <div className="expenses-labels">{this.state.maxName3}</div>
-                        {this.state.maxName1 ? <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum3}</div> : ''}
+                        {this.state.maxName3 ? <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum3}</div> : ''}
                     </div>
                 </div>
             </div>
@@ -532,6 +555,8 @@ class Dashboard extends Component{
 
                     if(tempArr.find(status => status === 0)) this.setState({redirectNewPlan: true});
                     else this.setState({redirectNewPlan: false})
+
+                    sessionStorage.removeItem("dateClicked");
 
                 })
                 .catch(error => {
