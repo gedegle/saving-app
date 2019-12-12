@@ -8,6 +8,9 @@ import axios from "axios";
 import {Modal} from "react-bootstrap";
 import ModalNewPost from "../ModalNewPost";
 import ActivePlansSingleton from "../ActivePlansSingleton";
+import DatePicker from "react-datepicker";
+import moment from "moment";
+import "react-datepicker/dist/react-datepicker.css";
 
 const activePlans = ActivePlansSingleton.getInstance();
 
@@ -16,10 +19,12 @@ class DisplayHistoryRows extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            url: 'http://localhost:8000/api/post'
+            urlPost: 'http://localhost:8000/api/post',
+            urlDelete: 'http://localhost:8000/api/post/'
         }
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSubmitUpdate = this.handleSubmitUpdate.bind(this);
         this.handleSumChange = this.handleSumChange.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
     showModal = e => {
         this.setState({
@@ -32,8 +37,8 @@ class DisplayHistoryRows extends Component{
             sum: evt.target.value
         });
     };
-    handleSubmit(evt) {
-        axios.put(this.state.url, {
+    handleSubmitUpdate(evt) {
+        axios.put(this.state.urlPost, {
             id: this.props.id,
             user_id: JSON.parse(sessionStorage.getItem("userData").id),
             date: this.state.date,
@@ -48,6 +53,18 @@ class DisplayHistoryRows extends Component{
             .catch(error => {
                 console.log(error.response)
             });
+    }
+    handleDelete(planId){
+        axios.delete(this.state.urlDelete+planId)
+            .then(res =>{
+                window.location.reload();
+            })
+            .catch(error => {
+                console.log(error.response)
+            });
+    }
+    filterByDate() {
+
     }
     render() {
         return (
@@ -67,12 +84,12 @@ class DisplayHistoryRows extends Component{
                             <div variant="link" onClick={this.showModal} className="exit"/>
                             <div className="adding-line">
                                 <ModalNewPost x={this.props.i} getSumInput={this.handleSumChange}/>
-                                <div onClick={this.handleSubmit} type={"submit"} className="submit-post">Pridėti</div>
+                                <div onClick={(e)=>this.handleSubmitUpdate} type={"submit"} className="submit-post">Pridėti</div>
                             </div>
                         </Modal.Body>`
                     </Modal>
                     <span style={{borderLeft: "1px solid #dee2e6", padding: "1.5em 0 1.5em 0.7em", marginLeft: "0.5em"}}/>
-                    <Icon className="remove-btn" icon={trashIcon} />
+                    <Icon onClick={(e)=>{this.handleDelete(this.props.planId)}} className="remove-btn" icon={trashIcon} />
                 </td>
             </tr>
         )
@@ -84,7 +101,8 @@ class History extends Component{
         super(props);
         this.state = {
             redirect: false,
-            url: 'http://localhost:8000/api/posts-all'
+            url: 'http://localhost:8000/api/posts-all',
+            startDate:  new Date()
         }
     }
     componentDidMount() {
@@ -96,6 +114,13 @@ class History extends Component{
                     res.data.data.forEach((x)=>{
                         if(x.plan_id == JSON.parse(sessionStorage.getItem("thisPlanId"))) tempArr.push(x);
                     })
+                    if(sessionStorage.getItem("dateClicked")) {
+                        let newTempArr = [];
+                        tempArr.forEach((item)=>{
+                            if(item.date == sessionStorage.getItem("dateClicked")) newTempArr.push(item);
+                        })
+                        tempArr = newTempArr;
+                    }
                     this.setState({
                         history: tempArr
                     })
@@ -119,9 +144,14 @@ class History extends Component{
                 <div id="dashboard">
                     <div id="archive-list-view">
                         <div id="list-viewport">
-                            <h3 className="list-h3">Įrašų istorija<span
-                                style={{fontWeight: 400, fontSize: "1rem", marginLeft: "1rem"}}>Visų įrašų plane istorija</span>
-                            </h3>
+                            <div className={"headings-display"}>
+                                <h3 className="list-h3">Įrašų istorija<span
+                                    style={{fontWeight: 400, fontSize: "1rem", marginLeft: "1rem"}}>Visų įrašų plane istorija</span>
+                                    </h3>
+                                {sessionStorage.getItem("dateClicked") ? <h4 className={"history-date"}>Įrašai iš {sessionStorage.getItem("dateClicked")}</h4> : ''}
+
+                            </div>
+
                             <table className="table">
                                 <thead className="thead-light">
                                 <tr>
@@ -137,7 +167,7 @@ class History extends Component{
                             <table className="table">
                                 <tbody>
                                 {this.state.history && this.state.history.map((item)=>(
-                                    <DisplayHistoryRows i={x++} type={item.type} sum={item.sum} date={item.date}/>
+                                    <DisplayHistoryRows i={x++} type={item.type} sum={item.sum} date={item.date} planId={item.id}/>
                                 ))}
                                 </tbody>
                             </table>

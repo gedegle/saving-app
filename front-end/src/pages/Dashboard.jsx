@@ -9,11 +9,11 @@ import moment from "moment";
 import axios from "axios";
 import ModalNewPost from "../ModalNewPost";
 import ActivePlansSingleton from "../ActivePlansSingleton";
-
 const activePlans = ActivePlansSingleton.getInstance();
 
 const historyPath = "/history";
 const statisticsPath = "/statistics";
+
 
 class ArchivePlan extends Component {
     constructor(props) {
@@ -66,39 +66,52 @@ class ArchivePlan extends Component {
     }
 }
 
-function ReturnCalendar() {
-    moment.locale('LT');
-    var startOfWeek = moment().startOf('isoWeek');
-    var endOfWeek = moment().endOf('isoWeek');
-    var today = moment().format('dd');
-    var days = [];
-    var day = startOfWeek;
+class ReturnCalendar extends Component{
+    constructor(props) {
+        super(props);
 
-    while (day <= endOfWeek) {
-        days.push(day.toDate());
-        day = day.clone().add(1, 'd');
+        this.handleClick = this.handleClick.bind(this);
     }
 
-    return(
-        <div className="calnd">
-            <div className="cal-lbl">Kalendorius</div>
-            <div className="calendar">
-                {days && days.map((d)=>(
-                    <div>
-                    {today === moment(d).format('dd') ?
-                        <div className="day active-day">
-                            <div className="day-name">{moment(d).locale('LT').format('dd')}</div>
-                            <div className="day-numb">{moment(d).format('D')}</div>
-                        </div> :
-                        <div className="day">
-                            <div className="day-name">{moment(d).locale('LT').format('dd')}</div>
-                            <div className="day-numb">{moment(d).format('D')}</div>
-                        </div>}
-                    </div>
-                ))}
+    handleClick(evt){
+        sessionStorage.setItem("dateClicked",evt.target.id);
+        window.location.replace(historyPath);
+    }
+
+    render() {
+        moment.locale('LT');
+        let startOfWeek = moment().startOf('isoWeek');
+        let endOfWeek = moment().endOf('isoWeek');
+        let today = moment().format('dd');
+        let days = [];
+        let day = startOfWeek;
+
+        while (day <= endOfWeek) {
+            days.push(day.toDate());
+            day = day.clone().add(1, 'd');
+        }
+
+        return (
+            <div className="calnd">
+                <div className="cal-lbl">Kalendorius</div>
+                <div className="calendar">
+                    {days && days.map((d)=>(
+                        <div>
+                            {today === moment(d).format('dd') ?
+                                <div className="day active-day" id={moment(d).format("YYYY-MM-DD")} onClick={this.handleClick}>
+                                    <div className="day-name">{moment(d).locale('LT').format('dd')}</div>
+                                    <div className="day-numb">{moment(d).format('D')}</div>
+                                </div> :
+                                <div className="day" id={moment(d).format("YYYY-MM-DD")} onClick={this.handleClick}>
+                                    <div className="day-name">{moment(d).locale('LT').format('dd')}</div>
+                                    <div className="day-numb">{moment(d).format('D')}</div>
+                                </div>}
+                        </div>
+                    ))}
+                </div>
             </div>
-        </div>
-    )
+        );
+    }
 }
 class CalculateEmitOffer extends Component{
     constructor(props) {
@@ -132,25 +145,29 @@ class CalculateEmitOffer extends Component{
         let maxName = "";
         let maxSum = 0;
         let tempArr = [];
+        let length = 0;
 
         let result = x.reduce((c, v) => {
             c[v.type] = v.sum + (c[v.type] || 0) ;
             return c;
         }, {});
 
-        for(let i=0; i<5; i++) {
+        if(x.length > 5) length = 5;
+        else length = x.length;
+
+        for (let i = 0; i < length; i++) {
             maxName = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
             maxSum = result[maxName];
-            if(maxName === "Pramogos" && maxSum >= 30) tempArr.push(maxName);
-            else if((maxName === "Greitas maistas" || maxName === "Saldumynai" || maxName === "Gaivieji gėrimai") && maxSum >= 20) tempArr.push(maxName);
-            else if(maxName === "Baldai" && maxSum >= 150) tempArr.push(maxName);
-            else if(maxName === "Dekoro prekės" && maxSum >= 80) tempArr.push(maxName);
-            else if(maxName === "Apyvokos prekės" && maxSum >= 30) tempArr.push(maxName);
-            else if(maxName === "Viršutiniai rūbai" && maxSum >= 45) tempArr.push(maxName);
-            else if(maxName === "Avalynė" && maxSum >= 30) tempArr.push(maxName);
-            else if(maxName === "Aksesuarai" && maxSum >= 15) tempArr.push(maxName);
-            else if(maxName === "Nuosavas trans." && maxSum >= 15) tempArr.push(maxName);
-            else if((maxName === "Žaidimų įranga" || maxName === "Video ir audio" || maxName === "Telefoninė įranga" || maxName === "Kompiuterinė įranga") && maxSum >= 100) tempArr.push(maxName);
+            if (maxName === "Pramogos" && maxSum >= 30) tempArr.push(maxName);
+            else if ((maxName === "Greitas maistas" || maxName === "Saldumynai" || maxName === "Gaivieji gėrimai") && maxSum >= 20) tempArr.push(maxName);
+            else if (maxName === "Baldai" && maxSum >= 150) tempArr.push(maxName);
+            else if (maxName === "Dekoro prekės" && maxSum >= 80) tempArr.push(maxName);
+            else if (maxName === "Apyvokos prekės" && maxSum >= 30) tempArr.push(maxName);
+            else if (maxName === "Viršutiniai rūbai" && maxSum >= 45) tempArr.push(maxName);
+            else if (maxName === "Avalynė" && maxSum >= 30) tempArr.push(maxName);
+            else if (maxName === "Aksesuarai" && maxSum >= 15) tempArr.push(maxName);
+            else if (maxName === "Nuosavas trans." && maxSum >= 15) tempArr.push(maxName);
+            else if ((maxName === "Žaidimų įranga" || maxName === "Video ir audio" || maxName === "Telefoninė įranga" || maxName === "Kompiuterinė įranga") && maxSum >= 100) tempArr.push(maxName);
             delete result[maxName];
         }
         this.setState({
@@ -197,21 +214,40 @@ class CalculateExpenses extends Component {
     }
 
     biggestExpenses(x) {
+        let maxSum1 = 0,
+            maxSum2 = 0,
+            maxSum3 = 0,
+            maxName1,
+            maxName2,
+            maxName3;
+
         let result = x.reduce((c, v) => {
             c[v.type] = v.sum + (c[v.type] || 0) ;
             return c;
         }, {});
 
-        let maxName1 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
-        let maxSum1 = result[maxName1];
+        if(x.length >= 3) {
+            maxName1 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum1 = result[maxName1];
 
-        delete result[maxName1];
-        let maxName2 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
-        let maxSum2 = result[maxName2];
+            delete result[maxName1];
+            maxName2 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum2 = result[maxName2];
 
-        delete result[maxName2];
-        let maxName3 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
-        let maxSum3 = result[maxName3];
+            delete result[maxName2];
+            maxName3 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum3 = result[maxName3];
+        } else if(x.length = 2) {
+            maxName1 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum1 = result[maxName1];
+
+            delete result[maxName1];
+            maxName2 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum2 = result[maxName2];
+        } else {
+            maxName1 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum1 = result[maxName1];
+        }
 
         this.setState({
             maxSum1: maxSum1,
@@ -238,14 +274,14 @@ class CalculateExpenses extends Component {
                     <div id="small-bubble">
                         <div className="number-row" id="second-row">2</div>
                         <div className="expenses-labels">{this.state.maxName2}</div>
-                        {this.state.maxName1 ? <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum2}</div> : '' }
+                        {this.state.maxName2 ? <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum2}</div> : '' }
                     </div>
                 </div>
                 <div>
                     <div id="smaller-bubble">
                         <div className="number-row" id="third-row">3</div>
                         <div className="expenses-labels">{this.state.maxName3}</div>
-                        {this.state.maxName1 ? <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum3}</div> : ''}
+                        {this.state.maxName3 ? <div className="expenses-sum"><span className="euro">&euro;</span>{this.state.maxSum3}</div> : ''}
                     </div>
                 </div>
             </div>
@@ -452,7 +488,7 @@ class ReturnActivePlan extends Component{
                                         <Icon className="iconify" id="piggy-dash" icon={piggyBank} />
                                         <span id="saved">Sutaupyta</span>
                                     </div>
-                                    <h2 id="saved-money"><span className="euro">&euro;</span>{this.state.saved ? this.state.saved : "Loading"}</h2>
+                                    <h2 id="saved-money"><span className="euro">&euro;</span>{this.state.saved >= 0 ? this.state.saved : "Loading"}</h2>
                                     <div className={"save-content"}>
                                         <p className="to-save">Liko: <span
                                             className="euro">&euro;</span>{this.state.leftToSave ? this.state.leftToSave : "Loading"}
@@ -519,6 +555,8 @@ class Dashboard extends Component{
 
                     if(tempArr.find(status => status === 0)) this.setState({redirectNewPlan: true});
                     else this.setState({redirectNewPlan: false})
+
+                    sessionStorage.removeItem("dateClicked");
 
                 })
                 .catch(error => {

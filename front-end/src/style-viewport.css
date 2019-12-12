@@ -216,6 +216,15 @@ input, select{
 	cursor: pointer;
 }
 /*---------dashboard------*/
+.headings-display{
+	display: flex;
+	flex-direction: row;
+}
+.history-date{
+	align-self: flex-end;
+	margin-left: auto;
+	color: #b5bdc3;
+}
 .plan-view{
 	margin-left: 15%;
 }
