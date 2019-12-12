@@ -33,6 +33,9 @@ Route::put('user','UsersController@store');
 //delete user
 Route::delete('user/{id}','UsersController@destroy');
 
+Route::put('user/update', 'UsersController@update');
+Route::put('user/update-pass', 'UsersController@updatePassword');
+
 
 //List plans
 Route::get('plans','PlansController@index');

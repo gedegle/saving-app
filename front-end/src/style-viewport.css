@@ -215,6 +215,92 @@ input, select{
 	color: #7045ff;
 	cursor: pointer;
 }
+.user-profile {
+	width: 200px;
+}
+.profile-settings{
+	padding-bottom: 10px;
+	font-size: 18px;
+	font-weight: 600;
+	font-family: 'Josefin Sans', sans-serif;
+	color: rgb(60, 63, 65);
+	/*text-align: center;*/
+	margin-bottom: 10px;
+}
+.names-of-settings{
+	font-size: 14.5px;
+}
+.settings-value{
+	font-size: 13px;
+	margin-top: 5px;
+	padding-bottom: 10px;
+}
+.settings-section-wrapper{
+	border-bottom: #b5bdc3 1px solid;
+	max-width: 180px;
+	margin-bottom: 7px;
+	display: flex;
+	flex-direction: row;
+}
+.settings-section-wrapper:nth-child(3){
+	padding-bottom: 10px;
+}
+.edit-email {
+	border-bottom: none;
+	margin-top: 20px;
+	display: flex;
+	flex-direction: column;
+}
+.edit-pass{
+	margin-left: 48px;
+	display: flex;
+	flex-direction: column;
+}
+.user-profile-img{
+	width: 120px;
+	height: 120px;
+	display: flex;
+	margin-bottom: 20px;
+}
+.edit-email{
+	display: flex;
+	margin-left: auto;
+	margin-top: 10px;
+}
+.inp-sec {
+	margin-left: -5px;
+	margin-top: 20px;
+	padding: 0.65833vw 0.98749vw;
+	border: 1px solid rgba(129, 131, 135, 0.26);
+	border-radius: 1.31666vw;
+	max-width: 150px;
+}
+.submit-settings{
+	color: #ffffff;
+	background-color: #7045ff;
+	border-radius: 1.97498vw;
+	padding: 0.65833vw 0.8vw;
+	margin-top: 12px;
+	width: 90px;
+	cursor: pointer;
+}
+.diff-color-name{
+	color: #7045ff;
+	font-weight: 400;
+	font-size: 14px;
+	margin-top: 5px;
+}
+.none {
+	display: none;
+}
+.email-value {
+	word-break: break-all;
+	max-width: 110px;
+}
+.wrapper-settings{
+	display: flex;
+	flex-direction: row;
+}
 /*---------dashboard------*/
 .plan-view{
 	margin-left: 15%;

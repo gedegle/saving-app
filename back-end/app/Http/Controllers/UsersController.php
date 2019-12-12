@@ -46,11 +46,25 @@ class UsersController extends Controller
         $user->id = $request->input('id');
         $user->name = $request->input('name');
         $user->email = $request->input('email');
-        $user->password = $request->input('password');
+        $user->password = bcrypt($request->input('password'));
 
         if($user->save()){
             return new UserResource($user);
         }
+    }
+
+    public function update(Request $request){
+        $user = User::findOrFail($request -> id);
+        $user->email = $request->input('email');
+        $user->save();
+        return new UserResource($user);
+    }
+
+    public function updatePassword(Request $request){
+        $user = User::findOrFail($request -> id);
+        $user->password = bcrypt($request->input('password'));
+        $user->save();
+        return new UserResource($user);
     }
 
     /**
