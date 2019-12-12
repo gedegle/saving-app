@@ -66,39 +66,52 @@ class ArchivePlan extends Component {
     }
 }
 
-function ReturnCalendar() {
-    moment.locale('LT');
-    var startOfWeek = moment().startOf('isoWeek');
-    var endOfWeek = moment().endOf('isoWeek');
-    var today = moment().format('dd');
-    var days = [];
-    var day = startOfWeek;
+class ReturnCalendar extends Component{
+    constructor(props) {
+        super(props);
 
-    while (day <= endOfWeek) {
-        days.push(day.toDate());
-        day = day.clone().add(1, 'd');
+        this.handleClick = this.handleClick.bind(this);
     }
 
-    return(
-        <div className="calnd">
-            <div className="cal-lbl">Kalendorius</div>
-            <div className="calendar">
-                {days && days.map((d)=>(
-                    <div>
-                    {today === moment(d).format('dd') ?
-                        <div className="day active-day">
-                            <div className="day-name">{moment(d).locale('LT').format('dd')}</div>
-                            <div className="day-numb">{moment(d).format('D')}</div>
-                        </div> :
-                        <div className="day">
-                            <div className="day-name">{moment(d).locale('LT').format('dd')}</div>
-                            <div className="day-numb">{moment(d).format('D')}</div>
-                        </div>}
-                    </div>
-                ))}
+    handleClick(evt){
+        sessionStorage.setItem("dateClicked",evt.target.id);
+        window.location.replace(historyPath);
+    }
+
+    render() {
+        moment.locale('LT');
+        let startOfWeek = moment().startOf('isoWeek');
+        let endOfWeek = moment().endOf('isoWeek');
+        let today = moment().format('dd');
+        let days = [];
+        let day = startOfWeek;
+
+        while (day <= endOfWeek) {
+            days.push(day.toDate());
+            day = day.clone().add(1, 'd');
+        }
+
+        return (
+            <div className="calnd">
+                <div className="cal-lbl">Kalendorius</div>
+                <div className="calendar">
+                    {days && days.map((d)=>(
+                        <div>
+                            {today === moment(d).format('dd') ?
+                                <div className="day active-day" id={moment(d).format("YYYY-MM-DD")} onClick={this.handleClick}>
+                                    <div className="day-name">{moment(d).locale('LT').format('dd')}</div>
+                                    <div className="day-numb">{moment(d).format('D')}</div>
+                                </div> :
+                                <div className="day" id={moment(d).format("YYYY-MM-DD")} onClick={this.handleClick}>
+                                    <div className="day-name">{moment(d).locale('LT').format('dd')}</div>
+                                    <div className="day-numb">{moment(d).format('D')}</div>
+                                </div>}
+                        </div>
+                    ))}
+                </div>
             </div>
-        </div>
-    )
+        );
+    }
 }
 class CalculateEmitOffer extends Component{
     constructor(props) {

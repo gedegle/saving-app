@@ -114,6 +114,13 @@ class History extends Component{
                     res.data.data.forEach((x)=>{
                         if(x.plan_id == JSON.parse(sessionStorage.getItem("thisPlanId"))) tempArr.push(x);
                     })
+                    if(sessionStorage.getItem("dateClicked")) {
+                        let newTempArr = [];
+                        tempArr.forEach((item)=>{
+                            if(item.date == sessionStorage.getItem("dateClicked")) newTempArr.push(item);
+                        })
+                        tempArr = newTempArr;
+                    }
                     this.setState({
                         history: tempArr
                     })
@@ -137,17 +144,12 @@ class History extends Component{
                 <div id="dashboard">
                     <div id="archive-list-view">
                         <div id="list-viewport">
-                            <div>
+                            <div className={"headings-display"}>
                                 <h3 className="list-h3">Įrašų istorija<span
                                     style={{fontWeight: 400, fontSize: "1rem", marginLeft: "1rem"}}>Visų įrašų plane istorija</span>
-                                </h3>
-                                <div className={"filer-section"}>
-                                    <label>Filtruoti pagal datą</label>
-                                    <DatePicker
-                                        selected={this.state.startDate}
-                                        onChange={this.handleChange}
-                                    />
-                                </div>
+                                    </h3>
+                                {sessionStorage.getItem("dateClicked") ? <h4 className={"history-date"}>Įrašai iš {sessionStorage.getItem("dateClicked")}</h4> : ''}
+
                             </div>
 
                             <table className="table">
