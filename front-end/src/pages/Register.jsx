@@ -42,7 +42,7 @@ class Register extends Component{
     }
     signup(){
         if(this.state.name && (this.state.password === this.state.password2) && this.state.email) {
-            axios.post('http://piggy-bank.com/api/register', {
+            axios.post('http://localhost:8000/api/register', {
                     name: this.state.name,
                     password: this.state.password,
                     email: this.state.email,
