@@ -553,7 +553,7 @@ class Dashboard extends Component{
                     })
 
 
-                    if(tempArr.find(status => status === 0)) this.setState({redirectNewPlan: true});
+                    if(tempArr.find(status => status === 0) || tempArr.length === 0) this.setState({redirectNewPlan: true});
                     else this.setState({redirectNewPlan: false})
 
                     sessionStorage.removeItem("dateClicked");
@@ -576,7 +576,7 @@ class Dashboard extends Component{
         }
         return(
             <div id={"viewport"}>
-                <SideBar activePlans={this.state.activePlans}/>
+                <SideBar activePlans={this.state.activePlans} />
                 <div className="biggest-bubble">
                 </div>
                 <div id={"dashboard"}>
