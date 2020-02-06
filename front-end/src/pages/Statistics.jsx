@@ -73,10 +73,10 @@ class ChartsPage extends React.Component {
                 .then(res =>{
                     res.data.data.forEach((x)=>{
                         if(x.plan_id == JSON.parse(sessionStorage.getItem("thisPlanId"))) tempArr.push(x);
-                    })
+                    });
                     this.setState({
                         posts: tempArr
-                    })
+                    });
 
                     this.getSums(tempArr);
                 })
@@ -98,19 +98,20 @@ class ChartsPage extends React.Component {
         let tempValues = Object.values(result);
 
         let tempKeys = Object.keys(result);
+
+        tempKeys.forEach((i)=>{
         Types.forEach((items)=>{
             items.types.forEach((name)=>{
-                tempKeys.forEach((i)=>{
-                    if(i.toString() === name) sumTypes.push(items.name);
-                });
-            })
+                if(i.toString() === name) sumTypes.push(items.name);
+            });
         });
-        console.log(sumTypes)
+        });
+
         for(let i=0; i<sumTypes.length; i++){
             newResult[i] = {};
             newResult[i]["name"] = sumTypes[i];
             newResult[i]["sum"] = tempValues[i];
-            console.log(tempValues[i])
+           // console.log(sumTypes[i])
         }
 
         newResult = newResult.reduce((c, v) => {
