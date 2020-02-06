@@ -7,13 +7,7 @@ import trashIcon from '@iconify/icons-si-glyph/trash';
 import axios from "axios";
 import {Modal} from "react-bootstrap";
 import ModalNewPost from "../ModalNewPost";
-import ActivePlansSingleton from "../ActivePlansSingleton";
-import DatePicker from "react-datepicker";
-import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
-
-const activePlans = ActivePlansSingleton.getInstance();
-
 
 class DisplayHistoryRows extends Component{
     constructor(props) {
@@ -21,7 +15,7 @@ class DisplayHistoryRows extends Component{
         this.state = {
             urlPost: 'http://localhost:8000/api/post',
             urlDelete: 'http://localhost:8000/api/post/'
-        }
+        };
         this.handleSubmitUpdate = this.handleSubmitUpdate.bind(this);
         this.handleSumChange = this.handleSumChange.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
@@ -30,7 +24,6 @@ class DisplayHistoryRows extends Component{
         this.setState({
             show: !this.state.show
         });
-        console.log(e.target)
     };
     handleSumChange (evt){
         this.setState({
@@ -47,11 +40,11 @@ class DisplayHistoryRows extends Component{
             type: this.state.type
         })
             .then(res =>{
-                this.setState({redirectHome: true})
+                this.setState({redirectHome: true});
                 window.location.reload();
             })
             .catch(error => {
-                console.log(error.response)
+              //  console.log(error.response)
             });
     }
     handleDelete(planId){
@@ -60,7 +53,7 @@ class DisplayHistoryRows extends Component{
                 window.location.reload();
             })
             .catch(error => {
-                console.log(error.response)
+             //   console.log(error.response)
             });
     }
     filterByDate() {
@@ -113,12 +106,12 @@ class History extends Component{
                 .then(res =>{
                     res.data.data.forEach((x)=>{
                         if(x.plan_id == JSON.parse(sessionStorage.getItem("thisPlanId"))) tempArr.push(x);
-                    })
+                    });
                     if(sessionStorage.getItem("dateClicked")) {
                         let newTempArr = [];
                         tempArr.forEach((item)=>{
                             if(item.date == sessionStorage.getItem("dateClicked")) newTempArr.push(item);
-                        })
+                        });
                         tempArr = newTempArr;
                     }
                     this.setState({
@@ -126,7 +119,7 @@ class History extends Component{
                     })
                 })
                 .catch(error => {
-                    console.log(error.response)
+                  //  console.log(error.response)
                 });
         }
     }
@@ -166,8 +159,8 @@ class History extends Component{
                             <div className={"table-wrapper"}>
                             <table className="table">
                                 <tbody>
-                                {this.state.history && this.state.history.map((item)=>(
-                                    <DisplayHistoryRows i={x++} type={item.type} sum={item.sum} date={item.date} planId={item.id}/>
+                                {this.state.history && this.state.history.map((item, i)=>(
+                                    <DisplayHistoryRows key={i} i={x++} type={item.type} sum={item.sum} date={item.date} planId={item.id}/>
                                 ))}
                                 </tbody>
                             </table>

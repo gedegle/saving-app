@@ -8,8 +8,6 @@ import { Modal } from 'react-bootstrap';
 import moment from "moment";
 import axios from "axios";
 import ModalNewPost from "../ModalNewPost";
-import ActivePlansSingleton from "../ActivePlansSingleton";
-const activePlans = ActivePlansSingleton.getInstance();
 
 const historyPath = "/history";
 const statisticsPath = "/statistics";
@@ -21,7 +19,7 @@ class ArchivePlan extends Component {
         this.state = {
             url: 'http://localhost:8000/api/plan/',
             redirectNewPlan: false
-        }
+        };
         this.putToArchive = this.putToArchive.bind(this);
     }
 
@@ -50,7 +48,7 @@ class ArchivePlan extends Component {
                 window.location.reload();
             })
             .catch(error => {
-                console.log(error.response)
+               // console.log(error.response)
             });
 
         sessionStorage.removeItem("activePlans")
@@ -95,8 +93,8 @@ class ReturnCalendar extends Component{
             <div className="calnd">
                 <div className="cal-lbl">Kalendorius</div>
                 <div className="calendar">
-                    {days && days.map((d)=>(
-                        <div>
+                    {days && days.map((d, i)=>(
+                        <div key={i}>
                             {today === moment(d).format('dd') ?
                                 <div className="day active-day" id={moment(d).format("YYYY-MM-DD")} onClick={this.handleClick}>
                                     <div className="day-name">{moment(d).locale('LT').format('dd')}</div>
@@ -128,16 +126,15 @@ class CalculateEmitOffer extends Component{
                 .then(res =>{
                     res.data.data.forEach((x)=>{
                         if(x.plan_id == JSON.parse(sessionStorage.getItem("thisPlanId"))) tempArr.push(x);
-                    })
-                    console.log(tempArr)
+                    });
 
                     this.setState({
                         posts: tempArr
-                    })
+                    });
                     this.whatToEmit(this.state.posts);
                 })
                 .catch(error => {
-                    console.log(error.response)
+                   // console.log(error.response)
                 });
         }
     }
@@ -178,8 +175,8 @@ class CalculateEmitOffer extends Component{
     render() {
         return (
                 <div className="recommend">
-                    {this.state.emitOffer && this.state.emitOffer.map((item) =>(
-                        <div>{item}</div>
+                    {this.state.emitOffer && this.state.emitOffer.map((item, i) =>(
+                        <div key={i}>{item}</div>
                     ))}
                 </div>
         );
@@ -200,15 +197,16 @@ class CalculateExpenses extends Component {
                 .then(res =>{
                     res.data.data.forEach((x)=>{
                         if(x.plan_id == JSON.parse(sessionStorage.getItem("thisPlanId"))) tempArr.push(x);
-                    })
+                    });
+
                     this.setState({
                         posts: tempArr
-                    })
+                    });
 
                     this.biggestExpenses(tempArr);
                 })
                 .catch(error => {
-                    console.log(error.response)
+                   // console.log(error.response)
                 });
         }
     }
@@ -221,32 +219,30 @@ class CalculateExpenses extends Component {
             maxName2,
             maxName3;
 
+        function assignMaxValues(maxName, maxSum) {
+            maxName = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
+            maxSum = result[maxName];
+        }
         let result = x.reduce((c, v) => {
             c[v.type] = v.sum + (c[v.type] || 0) ;
             return c;
         }, {});
 
         if(x.length >= 3) {
-            maxName1 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
-            maxSum1 = result[maxName1];
+            assignMaxValues(maxName1, maxSum1);
 
             delete result[maxName1];
-            maxName2 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
-            maxSum2 = result[maxName2];
+            assignMaxValues(maxName2, maxSum2);
 
             delete result[maxName2];
-            maxName3 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
-            maxSum3 = result[maxName3];
-        } else if(x.length = 2) {
-            maxName1 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
-            maxSum1 = result[maxName1];
+            assignMaxValues(maxName3, maxSum3);
+        } else if(x.length === 2) {
+            assignMaxValues(maxName1, maxSum1);
 
             delete result[maxName1];
-            maxName2 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
-            maxSum2 = result[maxName2];
+            assignMaxValues(maxName2, maxSum2);
         } else {
-            maxName1 = Object.keys(result).reduce((a, b) => result[a] > result[b] ? a : b);
-            maxSum1 = result[maxName1];
+            assignMaxValues(maxName1, maxSum1);
         }
 
         this.setState({
@@ -295,7 +291,7 @@ class AddNew extends Component{
 
         this.state = {
             show: false
-        }
+        };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSumChange = this.handleSumChange.bind(this);
         this.handleIncomeChange = this.handleIncomeChange.bind(this);
@@ -325,11 +321,11 @@ class AddNew extends Component{
             type: sessionStorage.getItem("typeId")
         })
             .then(res =>{
-                this.setState({redirectHome: true})
+                this.setState({redirectHome: true});
                 window.location.reload();
             })
             .catch(error => {
-                console.log(error.response)
+                //console.log(error.response)
             });
     }
 
@@ -365,7 +361,8 @@ class ReturnActivePlan extends Component{
             saved: null,
             degrees: null
 
-        }
+        };
+
         this.CalculateSavings = this.CalculateSavings.bind(this);
     }
 
@@ -387,26 +384,26 @@ class ReturnActivePlan extends Component{
                     //document.getElementsByClassName('fill').style = this.degrees;
                 })
                 .catch(error => {
-                    console.log(error.response)
+                    //console.log(error.response)
                 });
         }
     }
     CalculateSavings(plans, id){
-        let sum,
-            income,
+        let sum = 0,
+            income = 0,
             date,
-            tempArr = [],
-            count=1,
+            tempArr,
+            count,
             inAll = 0,
-            avgPerDay = 0,
-            avgPerMonth = 0,
-            tempLeftAMonth = 0,
+            avgPerDay,
+            avgPerMonth,
+            tempLeftAMonth,
             tempWhileSum = 0,
             monthCount = 1,
             daysToSave = 0,
-            leftToSave = 0,
-            saved = 0,
-            tempDays = 0;
+            leftToSave,
+            saved,
+            tempDays;
 
 
         plans.forEach((x)=>{
@@ -426,6 +423,7 @@ class ReturnActivePlan extends Component{
         tempArr = tempArr.sort((a, b) => b.date - a.date);
         tempArr = tempArr.filter((el, i, tempArr) => i === tempArr.indexOf(el));
         count = tempArr.length;
+
         //is viso isleista (inAll)
         for(var k=0; k<tempArr.length; k++) {
             inAll+=tempArr[k].sum;
@@ -465,7 +463,8 @@ class ReturnActivePlan extends Component{
             leftToSave: leftToSave,
             degrees: saved*180/sum,
             daysToSave: moment().add(daysToSave, 'days').format('YYYY-MM-DD')
-        })
+        });
+
         sessionStorage.setItem("leftToSave", leftToSave);
 
     }
@@ -526,7 +525,7 @@ class Dashboard extends Component{
                 .then(res =>{
                     res.data.data.forEach((x)=>{
                         if(x.user_id === JSON.parse(sessionStorage.getItem('userData')).id) tempArr.push(x);
-                    })
+                    });
 
                     this.setState({UserPlans: tempArr});
                     if(this.state.UserPlans && this.state.UserPlans.length > 0) {
@@ -542,7 +541,7 @@ class Dashboard extends Component{
                     else {
                         tempArr2.forEach((x)=>{
                             if(x.id === JSON.parse(sessionStorage.getItem("thisPlanId"))) find = true;
-                        })
+                        });
                         if(!find) sessionStorage.setItem("thisPlanId", tempArr2[0].id);
                     }
 
@@ -550,17 +549,17 @@ class Dashboard extends Component{
                         activePlans: tempArr2,
                         id: JSON.parse(sessionStorage.getItem('thisPlanId')),
                         userId: JSON.parse(sessionStorage.getItem('userData')).id
-                    })
+                    });
 
 
                     if(tempArr.find(status => status === 0) || tempArr.length === 0) this.setState({redirectNewPlan: true});
-                    else this.setState({redirectNewPlan: false})
+                    else this.setState({redirectNewPlan: false});
 
                     sessionStorage.removeItem("dateClicked");
 
                 })
                 .catch(error => {
-                    console.log(error.response)
+                   // console.log(error.response)
                 });
         }
     }
@@ -603,7 +602,6 @@ class Dashboard extends Component{
                                 <ReturnCalendar />
                                 {this.state.id ? <CalculateExpenses /> : ''}
                             </div>
-
                         </div>
                     </div>
                 </div>

@@ -26,7 +26,8 @@ class UserProfile extends Component {
             email: "",
             urlEmail: "http://localhost:8000/api/user/update",
             urlPass: "http://localhost:8000/api/user/update-pass"
-        }
+        };
+
         this.handleEmailEdit = this.handleEmailEdit.bind(this);
         this.handlePassEdit = this.handlePassEdit.bind(this);
         this.handleClickEditEmail = this.handleClickEditEmail.bind(this);
@@ -46,12 +47,14 @@ class UserProfile extends Component {
         this.setState({
             newEmail: evt.target.value
         })
-    }
+    };
+
     handlePassChange = (evt) => {
         this.setState({
             newPass: evt.target.value
         })
-    }
+    };
+
     handleEmailEdit(){
         if(sessionStorage.getItem("userData")) {
             axios.put(this.state.urlEmail, {
@@ -61,7 +64,8 @@ class UserProfile extends Component {
                 .then(res => {
                     this.setState({
                         email: this.state.newEmail
-                    })
+                    });
+
                     this.handleClickEditEmail();
                 })
                 .catch(error => {
@@ -101,7 +105,7 @@ class UserProfile extends Component {
             <div id={"user-profile-id"} className={"user-profile none"}>
                 <div className={"wrapper-settings"}>
                     <Icon onClick={this.displayProfileSettings} style={{cursor: "pointer"}} type="button" icon={outlineArrowBackIos} color="#3C3F41" />
-                    <img className={"user-profile-img"} src={userPic} alt={"profile picture"}/>
+                    <img className={"user-profile-img"} src={userPic} alt={"human profile"}/>
                 </div>
                 <h2 className={"profile-settings"}>Profilio nustatymai</h2>
                 <div className={"settings section"}>
@@ -157,7 +161,8 @@ class ReturnActivePlans extends Component{
         super(props);
         this.state = {
             redirect: false
-        }
+        };
+
         this.changeThisPlanId = this.changeThisPlanId.bind(this);
     }
     changeThisPlanId(){
@@ -168,7 +173,6 @@ class ReturnActivePlans extends Component{
     }
 
     render() {
-        console.log()
         if(this.state.redirect) {
             if (window.location.pathname !== mainViewPath)
                 return <Redirect to={mainViewPath}/>;
@@ -188,7 +192,8 @@ class SideBar extends Component{
         super(props);
         this.state = {
 
-        }
+        };
+
         this.displayProfileSettings = this.displayProfileSettings.bind(this);
     }
 
@@ -213,8 +218,8 @@ class SideBar extends Component{
                     </div>
                     <div className="lign"/>
                     <ul id="plans">
-                        {this.props.activePlans && this.props.activePlans.length > 0 && this.props.activePlans.map((item)=>(
-                            <div>
+                        {this.props.activePlans && this.props.activePlans.length > 0 && this.props.activePlans.map((item, i)=>(
+                            <div key={i}>
                                 {item.id === JSON.parse(sessionStorage.getItem("thisPlanId")) ? <ReturnActivePlans class={"plan active-plan"} i={item.id} sum={item.sum} id={item.id}/> :
                                     <ReturnActivePlans class={"plan"} i={item.id} sum={item.sum} id={item.id}/>}
                             </div>

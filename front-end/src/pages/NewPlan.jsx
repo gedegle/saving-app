@@ -4,9 +4,6 @@ import {Redirect} from 'react-router-dom';
 import PiggyPic from "../pictures/piggy.png";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-import ActivePlansSingleton from "../ActivePlansSingleton";
-
-const activePlans =ActivePlansSingleton.getInstance();
 
 class NewPlan extends Component{
     constructor(props){
@@ -17,7 +14,7 @@ class NewPlan extends Component{
             redirect: false,
             userId: "",
             redirectHome: false
-        }
+        };
 
         this.addPlan = this.addPlan.bind(this);
         this.handleSumChange = this.handleSumChange.bind(this);
@@ -43,7 +40,7 @@ class NewPlan extends Component{
                 this.setState({redirectHome: true})
             })
             .catch(error => {
-                console.log(error.response)
+              //  console.log(error.response)
             });
     }
     handleSumChange(evt) {

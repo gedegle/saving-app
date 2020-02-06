@@ -81,12 +81,12 @@ class ChartsPage extends React.Component {
                     this.getSums(tempArr);
                 })
                 .catch(error => {
-                    console.log(error.response)
+                   // console.log(error.response)
                 });
         }
     }
     getSums(x) {
-        let sums = [];
+        let sums;
         let sumTypes = [];
         let newResult = [];
 
@@ -111,7 +111,6 @@ class ChartsPage extends React.Component {
             newResult[i] = {};
             newResult[i]["name"] = sumTypes[i];
             newResult[i]["sum"] = tempValues[i];
-           // console.log(sumTypes[i])
         }
 
         newResult = newResult.reduce((c, v) => {

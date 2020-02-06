@@ -20,8 +20,8 @@ function SubtypeFactory () {
 }
 
 function TypesFactory(){
-    var types = [];
-    var subtypes = [];
+    const types = [];
+    const subtypes = [];
     this.typeFactory = new TypeFactory();
     this.subtypeFactory = new SubtypeFactory();
 
@@ -34,7 +34,7 @@ function TypesFactory(){
 
     this.getTypes = function () {
         return types;
-    }
+    };
     this.getSubtypes = function () {
         return subtypes;
     }

@@ -14,7 +14,7 @@ class Login extends Component{
             email: '',
             redirect: false,
             allPlans: ''
-        }
+        };
         this.onEmailChange = this.onEmailChange.bind(this);
         this.onPasswordChange = this.onPasswordChange.bind(this);
         this.login = this.login.bind(this);
@@ -34,13 +34,12 @@ class Login extends Component{
                 email: this.state.email
             })
                 .then(response => {
-                    console.log('from handle submit', response);
                     this.setState({redirect: true});
                     sessionStorage.setItem('userData',JSON.stringify(response.data.data));
 
                 })
                 .catch(error => {
-                    console.log(error.response)
+                    //console.log(error.response)
                 });
         }
 
@@ -72,7 +71,7 @@ class Login extends Component{
                         <img id="piggy" alt={"pink piggy bank"} src={Piggy}/>
                         <div className="signup-lbl" style={{marginBottom: "10%"}}>PRISIJUNK</div>
                         <div className="inputs">
-                            <input className="input" type="email" onChange={this.onEmailChange}required placeholder="El. Paštas"/>
+                            <input className="input" type="email" onChange={this.onEmailChange} required placeholder="El. Paštas"/>
                             <input className="input" type="password" onChange={this.onPasswordChange} required placeholder="Slaptažodis"/>
                         </div>
                         <button id="register-btn" type={"submit"} onClick={this.login}>Prisijungti</button>

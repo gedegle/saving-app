@@ -18,7 +18,8 @@ class Register extends Component{
             password2: '',
             email: '',
             redirect: false
-        }
+        };
+
         this.onEmailChange = this.onEmailChange.bind(this);
         this.onPasswordChange = this.onPasswordChange.bind(this);
         this.onPasswordChange2 = this.onPasswordChange2.bind(this);
@@ -30,15 +31,6 @@ class Register extends Component{
     }
     componentDidMount() {
         document.body.style.backgroundColor = "white";
-
-        /*axios.get('http://piggy-bank.com/api/users')
-            .then(res =>{
-                console.log("Nuskaityta")
-               // this.setState({allUsers: res.data.data});
-            })
-            .catch(error => {
-                console.log(error.response)
-            });*/
     }
     signup(){
         if(this.state.name && (this.state.password === this.state.password2) && this.state.email) {
@@ -49,12 +41,11 @@ class Register extends Component{
                     password_confirmation: this.state.password2
                 })
                 .then(response => {
-                    console.log('from handle submit', response);
                     this.setState({redirect: true});
                     sessionStorage.setItem('userData',JSON.stringify(response.data));
                 })
                 .catch(error => {
-                    console.log(error.response)
+                    //console.log(error.response)
                 });
         }
 
@@ -96,7 +87,7 @@ class Register extends Component{
                             <div className="signup-lbl-smaller">Užsiregistruokite ir pradėkite taupyti</div>
                             <div className="inputs">
                                 <input className="input" type="text" onChange={this.onNameChange} required placeholder="Vardas"/>
-                                <input className="input" type="email" onChange={this.onEmailChange}required placeholder="El. Paštas"/>
+                                <input className="input" type="email" onChange={this.onEmailChange} required placeholder="El. Paštas"/>
                                 <input className="input" type="password" onChange={this.onPasswordChange} required placeholder="Slaptažodis"/>
                                 <input className="input" type="password" onChange={this.onPasswordChange2} required placeholder="Pakartoti slaptažodį"/>
                                 </div>

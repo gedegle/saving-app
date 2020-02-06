@@ -13,15 +13,14 @@ function IconCoder() {
 }
 
 export default function IconProxy() {
-    var iconCoder = new IconCoder();
-    var iconCache = {};
+    const iconCoder = new IconCoder();
+    const iconCache = {};
 
     return {
         getIcon: function (ifSaved) {
             if(!iconCache[ifSaved]) {
                 iconCache[ifSaved] = iconCoder.getClass(ifSaved);
             }
-            console.log(ifSaved + ": " + iconCache[ifSaved]);
             return iconCache[ifSaved];
         }
     };
