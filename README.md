@@ -5,7 +5,7 @@ This web app is not yet completed perfectly and this is second attempt at workin
 
 *What it does*
 
-It is a saving web app that lets you register your expenses and follow your saving journey. 
+It is a saving web app that lets you register your expenses and follow your savings journey. 
 The app lets you see how much you should be saved according to your given monthly income and your registered expenses. 
 
 *How to use*
