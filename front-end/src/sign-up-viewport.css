@@ -1,24 +1,28 @@
-body{
+body {
     font-size: 1.05332vw;
     font-family: 'Muli', sans-serif;
-    margin:0;
+    margin: 0;
 }
-#viewportRegister{
+
+#viewportRegister {
     background-color: white;
 }
-.photo-side{
+
+.photo-side {
     display: inline-block;
     float: left;
     height: 47.39961vw;
     width: 52.66623vw;
 }
-#back-img{
+
+#back-img {
     height: 100%;
     width: 100%;
     object-fit: cover;
     overflow: hidden;
 }
-.sign-up-side{
+
+.sign-up-side {
 
     display: inline-block;
     float: left;
@@ -26,12 +30,14 @@ body{
     margin-left: 9%;
     text-align: center;
 }
-#piggy{
+
+#piggy {
     width: 4.60829vw;
     height: 3.94997vw;
     margin-top: 20%;
 }
-.signup-lbl{
+
+.signup-lbl {
     text-align: center;
     margin: 5% 5% 3% 5%;
     font-size: 3.15997vw;
@@ -39,38 +45,45 @@ body{
     font-family: 'Josefin Sans', sans-serif;
     font-weight: 800;
 }
-.signup-lbl-smaller{
+
+.signup-lbl-smaller {
     margin-bottom: 15%;
     color: #3F2992;
 }
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-input, button{
+
+input, button {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     box-shadow: none !important;
     outline: none;
     font-family: 'Muli', sans-serif;
-    border:none;
+    border: none;
 }
-.inputs{
+
+.inputs {
     display: inline-block;
     text-align: center;
 }
-.input{
+
+.input {
     width: 26.33311vw;
     font-size: 1em;
     border-bottom: 0.09875vw solid rgb(177, 184, 244);
     margin-bottom: 10%;
 
 }
-::placeholder{
+
+::placeholder {
     color: #3F2992;
 }
+
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
     color: #3F2992;
 }
@@ -78,12 +91,14 @@ input, button{
 ::-ms-input-placeholder { /* Microsoft Edge */
     color: #3F2992;
 }
-.sign-in{
+
+.sign-in {
     color: #B1B8F4;
     font-weight: 600;
     cursor: pointer;
 }
-#register-btn{
+
+#register-btn {
     background-image: linear-gradient(to bottom right, rgba(242, 152, 240, 0.96), rgba(144, 97, 255, 0.77));
     padding: 0.65833vw 1.71165vw;
     border-radius: 1.31666vw;
@@ -93,60 +108,13 @@ input, button{
     margin-bottom: 3%;
     cursor: pointer;
 }
-#register-btn:hover{
+
+#register-btn:hover {
 
     background-image: linear-gradient(to bottom right, rgba(242, 152, 240, 0.96), rgba(250, 214, 214, 0.96));
 }
-.input:hover::placeholder{
+
+.input:hover::placeholder {
     font-size: 0.52666vw;
     margin-bottom: 5%;
-}
-/*
-@media only screen and (min-width: 320px) and (max-width: 374px){
-    .photo-side{
-        width: 200%;
-    }
-    .sign-up-side{
-        margin-top:15%;
-        margin-left: 30%;
-    }
-}
-@media only screen and (min-width: 375px) and (max-width: 767px){
-    .photo-side{
-        height: 780px;
-        width: 100%;
-    }
-    .sign-up-side{
-        width: 100%;
-        margin-top: 0%;
-        margin-left: 30%;
-    }
-}-----------pataisyti-------*/
-@media only screen and (min-width: 768px) and (max-width: 1023px){
-    .photo-side{
-        height: 780px;
-        width: 47%;
-    }
-    .sign-up-side{
-        margin-left: 13%;
-        width: 25%;
-    }
-    .input{
-        width: 80%;
-    }
-
-}
-@media only screen and (min-width: 1024px) and (max-width: 1439px){
-    .photo-side{
-        width: 50%;
-        height: 611px;
-    }
-    .sign-up-side{
-        width: 30%;
-        margin-left: 9%;
-        text-align: center;
-    }
-    .input{
-        width: 100%
-    }
 }
