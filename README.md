@@ -14,5 +14,5 @@ Firstly, this page won't work without database, so you have to run `php artisan 
 I haven't yet made online server for this but in a future maybe I will.
 
 Secondly, after you run front end, you have to register or sign in. Then the web page lets you choose a plan. Write down how much you want to save and your monthly income.
-The calculation will show you when you will save the wanted sum you typed.
+The calculation will show you when you will save the wanted amount of money you typed.
 
