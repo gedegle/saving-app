@@ -4,12 +4,9 @@ import {Redirect} from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import piggyBank from '@iconify/icons-fa-solid/piggy-bank';
 import axios from "axios";
-import ActivePlansSingleton from "../ActivePlansSingleton";
 import IconProxy from "../IconProxy";
 
 var iconProxy = new IconProxy();
-
-const activePlans =ActivePlansSingleton.getInstance();
 
 function DisplayArchiveRows(props){
     return (
@@ -47,13 +44,14 @@ class Archive extends Component{
                         if(x.user_id == JSON.parse(sessionStorage.getItem("userData")).id){
                             if(x.status == 0) tempArr.push(x);
                         }
-                    })
+                    });
+
                     this.setState({
                         archive: tempArr
                     })
                 })
                 .catch(error => {
-                    console.log(error.response)
+                    //console.log(error.response)
                 });
         }
 
@@ -86,8 +84,8 @@ class Archive extends Component{
                             <div className={"table-wrapper"}>
                             <table className="table">
                                 <tbody>
-                                {this.state.archive && this.state.archive.map((item)=>(
-                                    <DisplayArchiveRows sum={item.sum} edited={item.updated_at} ifSaved={item.if_saved}/>
+                                {this.state.archive && this.state.archive.map((item, i)=>(
+                                    <DisplayArchiveRows key={i} sum={item.sum} edited={item.updated_at} ifSaved={item.if_saved}/>
                                 ))}
                                 </tbody>
                             </table>

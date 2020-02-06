@@ -10,7 +10,8 @@ import documentsSharp from "@iconify/icons-ion/documents-sharp";
 import outlineMore from "@iconify/icons-ic/outline-more";
 import React, {Component} from "react";
 import TypesFactory from "./TypesFactory";
-var typesFactory =new TypesFactory();
+
+const typesFactory = new TypesFactory();
 
 class ModalNewPost extends Component{
     constructor(props) {
@@ -19,7 +20,7 @@ class ModalNewPost extends Component{
             id: null,
             typeId: null,
             sum: 0
-        }
+        };
 
         this.changeId = this.changeId.bind(this);
         this.changeTypeId = this.changeTypeId.bind(this);
@@ -45,7 +46,7 @@ class ModalNewPost extends Component{
             temp = "Pramogos"
         } else if(x === "bills" ){
             temp = "Mokesčiai"
-        } else temp = "Kita"
+        } else temp = "Kita";
 
         this.setState({
             typeId: temp
