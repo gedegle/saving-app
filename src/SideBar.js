@@ -8,7 +8,6 @@ import piggyBank from '@iconify/icons-fa-solid/piggy-bank';
 import logoutVariant from '@iconify/icons-mdi/logout-variant';
 import pencilIcon from '@iconify/icons-foundation/pencil';
 import {Redirect} from 'react-router-dom';
-import userPic from "./pictures/user.svg";
 import axios from "axios";
 import outlineArrowBackIos from '@iconify/icons-ic/outline-arrow-back-ios';
 
@@ -105,7 +104,6 @@ class UserProfile extends Component {
             <div id={"user-profile-id"} className={"user-profile none"}>
                 <div className={"wrapper-settings"}>
                     <Icon onClick={this.displayProfileSettings} style={{cursor: "pointer"}} type="button" icon={outlineArrowBackIos} color="#3C3F41" />
-                    <img className={"user-profile-img"} src={userPic} alt={"human profile"}/>
                 </div>
                 <h2 className={"profile-settings"}>Profilio nustatymai</h2>
                 <div className={"settings section"}>
