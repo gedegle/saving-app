@@ -532,7 +532,7 @@ class Dashboard extends Component{
                         this.state.UserPlans.forEach((x)=>{
                             if(x.status === 1) tempArr2.push(x);
                         })
-                    }
+                    } else this.setState({redirectNewPlan: true});
 
                     let find = false;
                     if(!JSON.parse(sessionStorage.getItem("thisPlanId"))
@@ -563,8 +563,6 @@ class Dashboard extends Component{
                 });
         }
     }
-
-
 
     render(){
         if(this.state.redirect){
