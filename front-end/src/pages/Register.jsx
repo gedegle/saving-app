@@ -11,7 +11,6 @@ let loginPath = "/login";
 class Register extends Component{
     constructor(props) {
         super(props);
-
         this.state = {
             name: '',
             password: '',
@@ -24,6 +23,7 @@ class Register extends Component{
         this.onPasswordChange = this.onPasswordChange.bind(this);
         this.onPasswordChange2 = this.onPasswordChange2.bind(this);
         this.onNameChange = this.onNameChange.bind(this);
+        this.validatePassword = this.validatePassword.bind(this);
         this.signup = this.signup.bind(this);
     }
     componentWillUnmount(){
@@ -32,7 +32,17 @@ class Register extends Component{
     componentDidMount() {
         document.body.style.backgroundColor = "white";
     }
-    signup(){
+    validatePassword(e) {
+        if(this.state.password !== e.target.value) {
+            e.target.setCustomValidity("Slaptažodžiai nesutampa");
+        } else {
+            e.target.setCustomValidity('');
+        }
+    }
+    signup = evt => {
+        evt.preventDefault();
+        let email = document.getElementById('email');
+
         if(this.state.name && (this.state.password === this.state.password2) && this.state.email) {
             axios.post('http://localhost:8000/api/register', {
                     name: this.state.name,
@@ -45,11 +55,14 @@ class Register extends Component{
                     sessionStorage.setItem('userData',JSON.stringify(response.data));
                 })
                 .catch(error => {
-                    //console.log(error.response)
+                    if(error.response.status === 422) {
+                        email.setCustomValidity('Paskyra su tokiu el. paštu jau egzistuoja');
+                    } else email.setCustomValidity('');
                 });
         }
 
-    }
+    };
+
     onNameChange(e){
         this.setState({
             name: e.target.value
@@ -63,17 +76,21 @@ class Register extends Component{
     onPasswordChange2(e){
         this.setState({
             password2: e.target.value
-        })
+        });
+
+        this.validatePassword(e);
     }
     onEmailChange(e){
         this.setState({
             email: e.target.value
-        })
+        });
+
+        e.target.setCustomValidity('');
     }
 
     render() {
         if(this.state.redirect || sessionStorage.getItem('userData')){
-            return (<Redirect to={'/home'}/>)
+            return (<Redirect to={'/new-plan'}/>)
         }
         return(
             <div className="viewport" id={"viewportRegister"}>
@@ -86,12 +103,14 @@ class Register extends Component{
                             <div className="signup-lbl">PRISIJUNK</div>
                             <div className="signup-lbl-smaller">Užsiregistruokite ir pradėkite taupyti</div>
                             <div className="inputs">
-                                <input className="input" type="text" onChange={this.onNameChange} required placeholder="Vardas"/>
-                                <input className="input" type="email" onChange={this.onEmailChange} required placeholder="El. Paštas"/>
-                                <input className="input" type="password" onChange={this.onPasswordChange} required placeholder="Slaptažodis"/>
-                                <input className="input" type="password" onChange={this.onPasswordChange2} required placeholder="Pakartoti slaptažodį"/>
-                                </div>
-                            <button id="register-btn" type={"submit"} onClick={this.signup}>Užsiregistruoti</button>
+                                <form onSubmit={this.signup}>
+                                <input className="input" type="text" name={"name"} value={this.state.name} onChange={this.onNameChange} required placeholder="Vardas"/>
+                                <input id={"email"} className="input" type="email" name={"email"} value={this.state.email} onChange={this.onEmailChange} required placeholder="El. Paštas"/>
+                                <input className="input" type="password" minLength="8" name={"password"} value={this.state.password} onChange={this.onPasswordChange} required placeholder="Slaptažodis"/>
+                                <input className="input" type="password" minLength="8" name={"password2"} value={this.state.password2} onChange={this.onPasswordChange2} required placeholder="Pakartoti slaptažodį"/>
+                                <button id="register-btn" type={"submit"}>Užsiregistruoti</button>
+                                </form>
+                            </div>
                             <div>
                                 <div className="have-acc">Turite paskyrą?
                                     <Link to={loginPath} >

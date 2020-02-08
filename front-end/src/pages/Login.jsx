@@ -27,7 +27,8 @@ class Login extends Component{
         document.body.style.backgroundColor = null;
     }
 
-    login(){
+    login(e){
+        e.preventDefault();
         if(this.state.password && this.state.email) {
             axios.post('http://localhost:8000/api/login', {
                 password: this.state.password,
@@ -71,10 +72,12 @@ class Login extends Component{
                         <img id="piggy" alt={"pink piggy bank"} src={Piggy}/>
                         <div className="signup-lbl" style={{marginBottom: "10%"}}>PRISIJUNK</div>
                         <div className="inputs">
-                            <input className="input" type="email" onChange={this.onEmailChange} required placeholder="El. Paštas"/>
-                            <input className="input" type="password" onChange={this.onPasswordChange} required placeholder="Slaptažodis"/>
+                            <form onSubmit={this.login}>
+                                <input className="input" type="email" onChange={this.onEmailChange} required placeholder="El. Paštas"/>
+                                <input className="input" type="password" onChange={this.onPasswordChange} required placeholder="Slaptažodis"/>
+                                <button id="register-btn" type={"submit"}>Prisijungti</button>
+                            </form>
                         </div>
-                        <button id="register-btn" type={"submit"} onClick={this.login}>Prisijungti</button>
                     </div>
                 </div>
             </div>
