@@ -1,0 +1,46 @@
+{
+  "name": "front-end",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "concurrently -r --kill-others \"npm run calc-svg-icons:watch\" \"nuxt\"",
+    "nuxt-build": "nuxt build",
+    "nuxt-start": "nuxt start",
+    "generate": "nuxt generate",
+    "calc-svg-icons": "node tasks/calc-svg-icons",
+    "calc-svg-icons:watch": "npm run calc-svg-icons && nodemon --watch assets/sprite/gen tasks/calc-svg-icons",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore . && stylelint \"**/*.(vue|scss|css)\""
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.12.2",
+    "@nuxtjs/style-resources": "^1.0.0",
+    "@nuxtjs/svg-sprite": "^0.5.0",
+    "@nuxtjs/vuetify": "^1.11.2",
+    "concurrently": "^5.3.0",
+    "core-js": "^3.6.5",
+    "nuxt": "^2.14.6",
+    "nuxt-sass-resources-loader": "^2.0.5",
+    "nuxt-svg-loader": "^1.2.0",
+    "stylelint-config-recommended-scss": "^4.2.0",
+    "stylelint-scss": "^3.18.0",
+    "svg-sprite-loader": "^5.0.0",
+    "vuetify": "^2.3.15"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config": "^3.1.0",
+    "@nuxtjs/eslint-module": "^2.0.0",
+    "@nuxtjs/stylelint-module": "^4.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.10.0",
+    "eslint-config-prettier": "^6.14.0",
+    "eslint-plugin-nuxt": "^1.0.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "node-sass": "^4.14.1",
+    "nodemon": "^2.0.6",
+    "prettier": "^2.1.2",
+    "sass-loader": "^10.0.2",
+    "stylelint": "^13.7.2",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-standard": "^20.0.0"
+  }
+}

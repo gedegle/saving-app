@@ -6,6 +6,8 @@ use App\Post;
 use Illuminate\Http\Request;
 use App\Http\Resources\Post as PostResource;
 use App\Http\Requests;
+use Illuminate\Support\Facades\DB;
+
 class PostsController extends Controller
 {
     public function index()
@@ -23,6 +25,12 @@ class PostsController extends Controller
         $posts = Post::paginate(10000000000);
 
         //return collection of post as a resource
+
+        return PostResource::collection($posts);
+    }
+
+    public function indexByPlan($plan_id) {
+        $posts = Post::where('plan_id', '=', $plan_id)->orderBy('updated_at', 'DESC')->paginate(7);;
 
         return PostResource::collection($posts);
     }
@@ -49,6 +57,25 @@ class PostsController extends Controller
         }
     }
 
+    public function update(Request $request, $id)
+    {
+        $post = Post::findOrFail($id);
+
+        $this->validate($request, [
+            'sum' => 'required',
+            'date' => 'required',
+            'type' => 'required',
+        ]);
+
+        $input = $request->all();
+    
+        $post->fill($input)->save();
+
+        if($post->save()){
+            return new PostResource($post);
+        }
+    }
+
     /**
      * Display the specified resource.
      *
@@ -62,6 +89,21 @@ class PostsController extends Controller
 
         //return single post as a resource
         return new PostResource($post);
+    }
+
+     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showAllByPlan($planId, $userId)
+    {
+       //get post
+       $posts = Post::where('plan_id', '=', $planId)->where('user_id', '=', $userId)->get();
+       //return collection of post as a resource
+
+       return PostResource::collection($posts);
     }
 
     /**

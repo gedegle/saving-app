@@ -41,8 +41,10 @@ Route::put('user/update-pass', 'UsersController@updatePassword');
 Route::get('plans','PlansController@index');
 Route::get('plans-all','PlansController@indexAll');
 
-//List single plan
-Route::get('plan/{user_id}','PlansController@showByUser');
+//List user plan
+Route::get('user-plans/{user_id}','PlansController@showByUser');
+//List signle plan
+Route::get('plan/{id}','PlansController@show');
 
 //create new plan
 Route::post('plan','PlansController@store');
@@ -53,6 +55,7 @@ Route::put('plan/{id}','PlansController@update');
 //List posts
 Route::get('posts','PostsController@index');
 Route::get('posts-all','PostsController@indexAll');
+Route::get('posts/{plan_id}','PostsController@indexByPlan');
 
 //List single post
 Route::get('post/{id}','PostsController@show');
@@ -61,10 +64,13 @@ Route::get('post/{id}','PostsController@show');
 Route::post('post','PostsController@store');
 
 //update post
-Route::put('post','PostsController@store');
+Route::put('post/{id}','PostsController@update');
 
 //delete post
 Route::delete('post/{id}','PostsController@destroy');
+
+//all post by post id
+Route::get('posts-by-plan/{planId}/{userId}','PostsController@showAllByPlan');
 
 
 /**

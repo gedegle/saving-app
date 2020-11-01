@@ -1,0 +1,7 @@
+{
+  "stylelint.autoFixOnSave": true,
+  "eslint.format.enable": true,
+  "eslint.run": "onSave",
+  "editor.renderWhitespace": "boundary",
+  "files.saveConflictResolution": "overwriteFileOnDisk"
+}

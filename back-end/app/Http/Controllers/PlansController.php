@@ -84,10 +84,10 @@ class PlansController extends Controller
     public function showByUser($user_id)
     {
         //get post
-        $plan = Plan::findOrFail($user_id);
+        $plans = Plan::where('user_id', '=', $user_id)->get();;
 
         //return single post as a resource
-        return new PlanResource($plan);
+        return new PlanResource($plans);
     }
 
     /**
@@ -119,7 +119,7 @@ class PlansController extends Controller
         ]);
 
         $input = $request->all();
-
+    
         $plan->fill($input)->save();
 
         if($plan->save()){
