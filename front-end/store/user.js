@@ -4,37 +4,29 @@ export const namespaced = true
 export const state = () => ({
 	user: {},
 	validPlans: [],
-	archivedPlans: [],
 	activePlan: {
-		id: 1,
+		id: null,
 	},
-	activePlanIndex: 0,
+	activePlanIndex: null,
+	selectedDate: '',
 })
 
 export const getters = {
+	userData: (userState) => userState.user,
+	userId: (userState) => userState.user.id,
 	posts: (userState) => userState.activePosts,
 	plans: (userState) => userState.validPlans,
-	archived: (userState) => userState.archivedPlans,
 	activePlan: (userState) => userState.activePlan.id,
-	activePlanIndex: (state, getters) => {
-		let index = ''
-		Object.keys(getters.plans).forEach((key) => {
-			if (getters.plans[parseInt(key)].id === getters.activePlan) {
-				index = key
-			}
-		})
-
-		return parseInt(index)
-	},
+	activePlanIndex: (userState) => userState.activePlanIndex,
+	selectedDate: (userState) => userState.selectedDate,
 }
 export const actions = {
 	async signInUser({ state: userState, commit }, { email, password } = {}) {
 		const { data } = await PlanApi.login(email, password)
-		const plans = await PlanApi.getUserPlans(data.id)
+		const plans = await PlanApi.getActiveUserPlans(data.id)
 
 		commit('setUser', data)
 		commit('updatePlanList', plans.data)
-		commit('setActivePlan', plans.data ? plans.data[0] : plans.data)
 
 		const posts = await PlanApi.getPostsByPlan(
 			userState.activePlan.id,
@@ -46,7 +38,7 @@ export const actions = {
 		userState.refetchData = false
 	},
 	async fetchPlans({ state: userState, commit }) {
-		const { data } = await PlanApi.getUserPlans(userState.user.id)
+		const { data } = await PlanApi.getActiveUserPlans(userState.user.id)
 
 		commit('updatePlanList', data)
 	},
@@ -65,9 +57,8 @@ export const actions = {
 	},
 }
 export const mutations = {
-	updatePlanList(userState, userPlans) {
-		userState.validPlans = userPlans.filter((item) => item.status === 1)
-		userState.archivedPlans = userPlans.filter((item) => item.status === 0)
+	updatePlanList(userState, activeUserPlans) {
+		userState.validPlans = activeUserPlans
 	},
 	updatePostList(userState, posts) {
 		userState.activePosts = posts
@@ -77,5 +68,12 @@ export const mutations = {
 	},
 	setActivePlan(userState, plan) {
 		userState.activePlan = plan
+		userState.activePlanIndex = userState.validPlans.indexOf(plan)
+	},
+	setActivePlanIndex(userState, index) {
+		userState.activePlanIndex = index
+	},
+	selectPlanPostsDate(userState, date) {
+		userState.selectedDate = date
 	},
 }

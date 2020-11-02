@@ -6,8 +6,15 @@ const link = axios.create({
 	withCredentials: false,
 })
 export default {
-	async getUserPlans(id) {
-		const data = await link.get(`/user-plans/${id}`)
+	async getActiveUserPlans(id) {
+		const { data } = await link.get(`/user-plans/active/${id}`)
+
+		return data
+	},
+	async getArchivedUserPlans(id, page) {
+		const { data } = await link.get(`/user-plans/archived/${id}`, {
+			page,
+		})
 
 		return data
 	},
@@ -24,6 +31,20 @@ export default {
 	},
 	async getPlanHistory(id, page) {
 		const { data } = await link.get(`/posts/${id}/?page=${page}`)
+		return data
+	},
+	async filterPostsByDate(planId, page, date) {
+		const { data } = await link.get(`/posts/${planId}/${date}/?page=${page}`)
+		return data
+	},
+	updateProfile(info) {
+		const data = link.put('/user/update', info)
+
+		return data
+	},
+	updatePassword(info) {
+		const data = link.put('/user/update-pass', info)
+
 		return data
 	},
 	updatePost(id, post) {
@@ -46,5 +67,16 @@ export default {
 			plan_id: planId,
 			type,
 		})
+	},
+	createPlan(sum, income, userId) {
+		const data = link.post('/plan', {
+			sum,
+			income,
+			user_id: userId,
+			if_saved: 0,
+			status: 1,
+		})
+
+		return data
 	},
 }

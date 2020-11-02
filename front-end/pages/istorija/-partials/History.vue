@@ -1,6 +1,17 @@
 <template>
 	<div class="history">
-		<div class="history__buttons-wrapper"></div>
+		<div class="history__buttons-wrapper">
+			<input
+				type="date"
+				class="history__date-picker"
+				@change="selectDate($event.target.value)"
+			/>
+			<my-svg
+				name="plus-filled"
+				class="history__add-button"
+				@click="openNewModal"
+			/>
+		</div>
 		<table class="history__content-table">
 			<thead>
 				<tr class="history__table-head">
@@ -20,7 +31,11 @@
 					<td class="history__table-body-cell">{{ item.sum }}</td>
 					<td class="history__table-body-cell">{{ item.date }}</td>
 					<td class="history__table-body-cell history__table-body-cell--actions">
-						<my-svg class="history__post-icon" name="edit" @click="openModal(item)" />
+						<my-svg
+							class="history__post-icon"
+							name="edit"
+							@click="openEditModal(item)"
+						/>
 						<my-svg
 							class="history__post-icon"
 							name="delete"
@@ -48,8 +63,8 @@
 		</div>
 		<ModalAddNew
 			v-if="isModalNewOpen"
-			to-edit
-			button-text="Pakeisti"
+			:to-edit="toEdit"
+			:button-text="buttonText"
 			:prop-date="date"
 			:prop-type="type"
 			:prop-sum="sum"
@@ -81,11 +96,14 @@ export default {
 			date: '',
 			type: '',
 			sum: 0,
+			toEdit: true,
+			buttonText: '',
 		}
 	},
 	computed: {
 		...mapGetters({
 			activePlan: 'user/activePlan',
+			selectedDate: 'user/selectedDate',
 		}),
 	},
 	watch: {
@@ -93,18 +111,77 @@ export default {
 			if (from.query.page !== to.query.page) {
 				this.fetchData()
 			}
+
+			if (from.query.date) {
+				this.fetchData()
+			}
 		},
 	},
 	methods: {
+		selectDate(date) {
+			this.$store.commit('user/selectPlanPostsDate', date)
+			this.$router.push({
+				path: '/istorija',
+				query: {
+					page: 1,
+					date,
+				},
+			})
+		},
+		async fetchData() {
+			await PlansApi.filterPostsByDate(
+				this.activePlan,
+				parseInt(this.$route.query.page) || 1,
+				this.selectedDate
+			).then((res) => {
+				this.posts = res.data
+				const totalPages = Math.ceil(res.meta.total / 7)
+
+				if (totalPages > 1) {
+					if (
+						this.$route.query.page &&
+						parseInt(this.$route.query.page) <= this.nextPage &&
+						parseInt(this.$route.query.page) + 1 <= totalPages
+					) {
+						this.nextPage = parseInt(this.$route.query.page) + 1
+					} else if (!this.$route.query.page) {
+						this.nextPage = 2
+					} else {
+						this.nextPage = null
+					}
+
+					if (
+						this.$route.query.page &&
+						parseInt(this.$route.query.page) !== 1 &&
+						parseInt(this.$route.query.page) > this.prevPage
+					) {
+						this.prevPage = parseInt(this.$route.query.page) - 1
+					} else {
+						this.prevPage = null
+					}
+				}
+			})
+		},
 		onClickEdit(value) {
 			this.isModalNewOpen = value
 			setTimeout(() => this.fetchData(), 500)
 		},
-		openModal(post) {
+		openEditModal(post) {
+			this.toEdit = true
+			this.buttonText = 'Pakeisti'
 			this.date = post.date
 			this.type = post.type
 			this.sum = post.sum
 			this.postId = post.id
+			this.isModalNewOpen = true
+		},
+		openNewModal() {
+			this.toEdit = false
+			this.buttonText = 'Pridėti'
+			this.date = null
+			this.type = null
+			this.sum = null
+			this.postId = null
 			this.isModalNewOpen = true
 		},
 		deletePost(id) {
@@ -116,6 +193,7 @@ export default {
 				path: '/istorija',
 				query: {
 					page: this.nextPage,
+					date: this.selectedDate,
 				},
 			})
 		},
@@ -124,36 +202,8 @@ export default {
 				path: '/istorija',
 				query: {
 					page: this.prevPage,
+					date: this.selectedDate,
 				},
-			})
-		},
-		async fetchData() {
-			await PlansApi.getPlanHistory(
-				this.activePlan,
-				parseInt(this.$route.query.page)
-			).then((res) => {
-				this.posts = res.data
-				const totalPages = Math.ceil(res.meta.total / 7)
-
-				if (totalPages > 1) {
-					if (this.$route.query.page && this.$route.query.page <= this.nextPage) {
-						this.nextPage = parseInt(this.$route.query.page) + 1
-					} else if (!this.$route.query.page) {
-						this.nextPage = 2
-					} else {
-						this.nextPage = null
-					}
-
-					if (
-						this.$route.query.page &&
-						this.$route.query.page !== 1 &&
-						this.$route.query.page > this.prevPage
-					) {
-						this.prevPage = parseInt(this.$route.query.page) - 1
-					} else {
-						this.prevPage = null
-					}
-				}
 			})
 		},
 	},
@@ -176,7 +226,7 @@ export default {
 		flex-grow: 1;
 		margin: 0;
 		max-width: 1200px;
-		padding: 30px;
+		padding: 30px 30px 5px 30px;
 		position: relative;
 		table-layout: fixed;
 		width: 100%;
@@ -238,6 +288,23 @@ export default {
 		&:last-child {
 			padding: 0 10px 0 0;
 		}
+	}
+
+	&__buttons-wrapper {
+		display: flex;
+		padding-right: 25px;
+		justify-content: flex-end;
+		padding-top: 20px;
+	}
+
+	&__add-button {
+		cursor: pointer;
+		width: 25px;
+		height: 25px;
+		margin-left: 15px;
+		border-radius: 50%;
+		color: #7045ff;
+		box-shadow: 0 0 10px 0 #b4b2b2;
 	}
 }
 

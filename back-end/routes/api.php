@@ -42,7 +42,8 @@ Route::get('plans','PlansController@index');
 Route::get('plans-all','PlansController@indexAll');
 
 //List user plan
-Route::get('user-plans/{user_id}','PlansController@showByUser');
+Route::get('user-plans/active/{user_id}','PlansController@showByUserActive');
+Route::get('user-plans/archived/{user_id}','PlansController@showByUserArchived');
 //List signle plan
 Route::get('plan/{id}','PlansController@show');
 
@@ -52,10 +53,23 @@ Route::post('plan','PlansController@store');
 Route::put('plan/{id}','PlansController@update');
 
 
+//List notes
+Route::get('notes','NotesController@index');
+//create new note
+Route::post('note','NotesController@store');
+//update note
+Route::put('note','NotesController@update');
+//List signle note
+Route::get('note/{id}','NotesController@show');
+//delete note
+Route::delete('note/{id}','NotesController@destroy');
+
+
 //List posts
 Route::get('posts','PostsController@index');
 Route::get('posts-all','PostsController@indexAll');
 Route::get('posts/{plan_id}','PostsController@indexByPlan');
+Route::get('posts/{plan_id}/{date}','PostsController@filterByDate');
 
 //List single post
 Route::get('post/{id}','PostsController@show');

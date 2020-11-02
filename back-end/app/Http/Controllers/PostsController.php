@@ -22,7 +22,7 @@ class PostsController extends Controller
     public function indexAll()
     {
         //get post
-        $posts = Post::paginate(10000000000);
+        $posts = Post::get();
 
         //return collection of post as a resource
 
@@ -101,6 +101,15 @@ class PostsController extends Controller
     {
        //get post
        $posts = Post::where('plan_id', '=', $planId)->where('user_id', '=', $userId)->get();
+       //return collection of post as a resource
+
+       return PostResource::collection($posts);
+    }
+
+    public function filterByDate($planId, $date)
+    {
+       //get post
+       $posts = Post::where('plan_id', '=', $planId)->where('date', '=', $date)->paginate(7);
        //return collection of post as a resource
 
        return PostResource::collection($posts);

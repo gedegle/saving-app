@@ -1,7 +1,9 @@
 <template>
 	<div class="navigation">
 		<div class="navigation__buttons-wrapper">
-			<nuxt-link class="navigation__button" to="/"> Pagrindinis </nuxt-link>
+			<nuxt-link class="navigation__button" to="/pagrindinis">
+				Pagrindinis
+			</nuxt-link>
 			<nuxt-link class="navigation__button" to="/statistika">
 				Statistika
 			</nuxt-link>
@@ -15,25 +17,32 @@
 
 <script>
 import PlansApi from '@/utils/PlansApi.js'
+import { mapGetters } from 'vuex'
 
 export default {
+	computed: {
+		...mapGetters({
+			plans: 'user/plans',
+			activePlanIndex: 'user/activePlanIndex',
+			activePlan: 'user/activePlan',
+		}),
+	},
 	methods: {
 		goToPage(link) {
 			this.$router.push(link)
 		},
-		async archivePlan() {
-			PlansApi.archivePlan(this.activePlan, 0)
+		archivePlan() {
 			if (this.activePlanIndex === 0) {
 				this.redirectToNewPlan = true
 				return
 			}
-
+			const archivePlanId = this.activePlan
 			this.$store.commit(
 				'user/setActivePlan',
 				this.plans[this.activePlanIndex - 1]
 			)
-
-			await this.$store.dispatch('user/refetchUserData')
+			PlansApi.archivePlan(archivePlanId, 0)
+			setTimeout(() => this.$store.dispatch('user/refetchUserData'), 700)
 		},
 	},
 }
@@ -45,7 +54,8 @@ export default {
 
 	display: flex;
 	justify-content: space-between;
-	padding-bottom: 40px;
+	padding-top: 10px;
+	padding-bottom: 27px;
 
 	&__button {
 		font-weight: 400;

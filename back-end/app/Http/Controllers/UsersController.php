@@ -55,6 +55,7 @@ class UsersController extends Controller
 
     public function update(Request $request){
         $user = User::findOrFail($request -> id);
+        $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->save();
         return new UserResource($user);

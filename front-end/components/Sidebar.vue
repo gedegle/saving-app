@@ -1,109 +1,171 @@
 <template>
-	<div class="sidebar-wrapper">
-		<div class="sidebar">
-			<div>
-				<h1 class="sidebar__title">Saving app</h1>
-				<div class="sidebar__plans-wrapper">
-					<div
-						v-for="(item, index) in plans"
-						:key="`plan-${index}`"
-						class="sidebar__plan"
-						:class="{
-							'sidebar__plan--active': index === activePlanIndex,
-						}"
-						@click="openPlan(index)"
-					>
-						<div class="sidebar__sum-wrapper">
-							<my-svg
-								class="sidebar__plan-icon"
-								:class="{
-									'sidebar__plan-icon--active': index === activePlanIndex,
-								}"
-								name="saving-pig"
-							/>
-							<p>
-								<span> € </span>
-								{{ item.sum }}
-							</p>
-						</div>
-						<my-svg
-							v-if="index === activePlanIndex"
-							class="sidebar__arrow"
+	<div>
+		<div class="sidebar-wrapper">
+			<div class="sidebar">
+				<div>
+					<h1 class="sidebar__title">Saving app</h1>
+					<div class="sidebar__plans-wrapper">
+						<div
+							v-for="(item, index) in plans"
+							:key="`plan-${index}`"
+							class="sidebar__plan"
 							:class="{
-								'sidebar__arrow--active': index === activePlanIndex,
+								'sidebar__plan--active':
+									index === activePlanIndex && !removePlanHighligh,
 							}"
-							name="arrow-right"
-						/>
-					</div>
-					<div class="buttons">
-						<div class="buttons__button">
+							@click="openPlan(index, item)"
+						>
+							<div class="sidebar__sum-wrapper">
+								<my-svg
+									class="sidebar__plan-icon"
+									:class="{
+										'sidebar__plan-icon--active':
+											index === activePlanIndex && !removePlanHighligh,
+									}"
+									name="saving-pig"
+								/>
+								<p>
+									<span> € </span>
+									{{ item.sum }}
+								</p>
+							</div>
 							<my-svg
-								class="buttons__icon"
+								v-if="index === activePlanIndex && !removePlanHighligh"
+								class="sidebar__arrow"
 								:class="{
-									'buttons__icon--active': activeSettingIndex === 0,
+									'sidebar__arrow--active': index === activePlanIndex,
 								}"
-								name="plus"
+								name="arrow-right"
 							/>
-							<p class="buttons__text">Naujas planas</p>
 						</div>
-						<div class="buttons__button">
-							<my-svg
-								class="buttons__icon"
-								:class="{
-									'buttons__icon--active': activeSettingIndex === 1,
-								}"
-								name="notebook"
-							/>
-							<p class="buttons__text">Užrašai</p>
-						</div>
-						<div class="buttons__button">
-							<my-svg
-								class="buttons__icon"
-								:class="{
-									'buttons__icon--active': activeSettingIndex === 2,
-								}"
-								name="archive"
-							/>
-							<p class="buttons__text">Archyvas</p>
-						</div>
-						<div class="buttons__button">
-							<my-svg
-								class="buttons__icon"
-								:class="{
-									'buttons__icon--active': activeSettingIndex === 3,
-								}"
-								name="settings"
-							/>
-							<p class="buttons__text">Nustatymai</p>
+						<div class="buttons">
+							<div
+								class="buttons__button"
+								:class="{ 'buttons__button--disabled': plans.length === 3 }"
+								@click="goToPage('/naujas-planas')"
+							>
+								<my-svg
+									class="buttons__icon"
+									:class="{
+										'buttons__icon--active': $route.path === '/naujas-planas',
+									}"
+									name="plus"
+								/>
+								<p class="buttons__text">Naujas planas</p>
+							</div>
+							<div class="buttons__button">
+								<my-svg
+									class="buttons__icon"
+									:class="{
+										'buttons__icon--active': $route.path === '/uzrasai',
+									}"
+									name="notebook"
+								/>
+								<p class="buttons__text">Užrašai</p>
+							</div>
+							<div class="buttons__button" @click="goToPage('/archyvas')">
+								<my-svg
+									class="buttons__icon"
+									:class="{
+										'buttons__icon--active': $route.path === '/archyvas',
+									}"
+									name="archive"
+								/>
+								<p class="buttons__text">Archyvas</p>
+							</div>
+							<div class="buttons__button" @click="isModalOpen = !isModalOpen">
+								<my-svg class="buttons__icon" name="settings" />
+								<p class="buttons__text">Nustatymai</p>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="signout">
-				<my-svg class="signout__icon" name="sign-out" />
-				<p class="signout__text">Atsijungti</p>
+				<div class="signout">
+					<my-svg class="signout__icon" name="sign-out" />
+					<p class="signout__text">Atsijungti</p>
+				</div>
 			</div>
 		</div>
+		<ModalSettings
+			v-if="isModalOpen"
+			:prop-name="user.name"
+			:prop-email="user.email"
+			@clicked="onClickSettings($event)"
+		/>
 	</div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import ModalSettings from './ModalSettings.vue'
 
 export default {
+	components: {
+		ModalSettings,
+	},
+	props: {
+		removePlanHighligh: {
+			type: Boolean,
+			default: false,
+		},
+	},
+	data() {
+		return {
+			isModalOpen: false,
+		}
+	},
 	computed: {
 		...mapGetters({
 			plans: 'user/plans',
 			activePlanIndex: 'user/activePlanIndex',
+			activePlan: 'user/activePlan',
+			user: 'user/userData',
 		}),
-		activeSettingIndex() {
-			return 0
+	},
+	watch: {
+		$route(to, from) {
+			if (to.query.plan !== from.query.plan) {
+				this.setActivePlan()
+			}
 		},
 	},
+	mounted() {
+		this.setActivePlan()
+	},
 	methods: {
-		async openPlan(index) {
-			this.$store.commit('user/setActivePlan', this.plans[index])
-			await this.$store.dispatch('user/refetchUserData')
+		onClickSettings(value) {
+			this.isModalOpen = value
+		},
+		setActivePlan() {
+			if (this.$route.query.plan) {
+				const [activePlan] = this.plans.filter(
+					(item) => item.id === parseInt(this.$route.query.plan)
+				)
+				this.$store.commit('user/setActivePlan', activePlan)
+				this.$store.dispatch('user/refetchUserData')
+			} else if (this.plans.length) {
+				this.$store.commit('user/setActivePlan', this.plans[0])
+				this.$store.dispatch('user/refetchUserData')
+			} else {
+				this.redirectToNewPlan = true
+			}
+		},
+		openPlan(index, plan) {
+			this.$store.commit('user/setActivePlan', plan)
+			this.$router.push({
+				path: '/pagrindinis',
+				query: {
+					plan: plan.id,
+				},
+			})
+			this.$store.dispatch('user/refetchUserData')
+		},
+		goToPage(path) {
+			if (this.plans.length < 3) {
+				this.$router.push({
+					path,
+				})
+			}
 		},
 	},
 }
@@ -232,6 +294,19 @@ export default {
 
 			& #{$this}__icon {
 				color: $color-grey--900;
+			}
+		}
+
+		&--disabled {
+			cursor: unset;
+
+			&:hover,
+			&:focus {
+				color: $color-grey--800;
+
+				& #{$this}__icon {
+					color: $color-grey--600;
+				}
 			}
 		}
 	}

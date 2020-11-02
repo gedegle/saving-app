@@ -81,10 +81,19 @@ class PlansController extends Controller
         //return single post as a resource
         return new PlanResource($plan);
     }
-    public function showByUser($user_id)
+    public function showByUserActive($user_id)
     {
         //get post
-        $plans = Plan::where('user_id', '=', $user_id)->get();;
+        $plans = Plan::where('user_id', '=', $user_id)->where('status', '=', 1)->paginate(7);
+
+        //return single post as a resource
+        return new PlanResource($plans);
+    }
+
+    public function showByUserArchived($user_id)
+    {
+        //get post
+        $plans = Plan::where('user_id', '=', $user_id)->where('status', '=', 0)->paginate(9);
 
         //return single post as a resource
         return new PlanResource($plans);

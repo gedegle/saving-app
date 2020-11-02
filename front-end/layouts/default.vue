@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<Sidebar />
+		<Sidebar :remove-plan-highligh="!showNavigation" />
 		<div class="main-layout">
-			<Navigation />
+			<Navigation v-if="showNavigation" />
 			<Nuxt />
 		</div>
 	</div>
@@ -10,6 +10,18 @@
 <script>
 export default {
 	middleware: 'dispatchData',
+	computed: {
+		showNavigation() {
+			if (
+				this.$route.path === '/naujas-planas' ||
+				this.$route.path === '/archyvas' ||
+				this.$route.path === '/uzrasai'
+			) {
+				return false
+			}
+			return true
+		},
+	},
 }
 </script>
 <style lang="scss">
