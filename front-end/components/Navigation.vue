@@ -7,7 +7,17 @@
 			<nuxt-link class="navigation__button" to="/statistika">
 				Statistika
 			</nuxt-link>
-			<nuxt-link class="navigation__button" to="/istorija"> Istorija </nuxt-link>
+			<nuxt-link
+				class="navigation__button"
+				:to="{
+					path: '/istorija',
+					query: {
+						plan: activePlan,
+					},
+				}"
+			>
+				Istorija
+			</nuxt-link>
 		</div>
 		<button class="navigation__archive-button" @click="archivePlan">
 			Archyvuoti planą

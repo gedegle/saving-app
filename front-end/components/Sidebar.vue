@@ -80,7 +80,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="signout">
+				<div class="signout" @click="logout">
 					<my-svg class="signout__icon" name="sign-out" />
 					<p class="signout__text">Atsijungti</p>
 				</div>
@@ -129,9 +129,6 @@ export default {
 			}
 		},
 	},
-	mounted() {
-		this.setActivePlan()
-	},
 	methods: {
 		onClickSettings(value) {
 			this.isModalOpen = value
@@ -166,6 +163,10 @@ export default {
 					path,
 				})
 			}
+		},
+		async logout() {
+			await this.$auth.logout()
+			this.$router.push('/login')
 		},
 	},
 }
@@ -326,6 +327,7 @@ export default {
 .signout {
 	display: flex;
 	margin: 10px 0;
+	cursor: pointer;
 
 	&__icon {
 		color: $color-grey--700;

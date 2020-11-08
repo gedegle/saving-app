@@ -1,5 +1,6 @@
 <template>
-	<Dashboard />
+	<loader v-if="!$auth.user.planCount" :loading="!$auth.user" />
+	<Dashboard v-else />
 </template>
 
 <script>

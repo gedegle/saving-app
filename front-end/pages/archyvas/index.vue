@@ -73,6 +73,9 @@ import { mapGetters } from 'vuex'
 import PlansApi from '@/utils/PlansApi.js'
 
 export default {
+	async fetch() {
+		await this.fetchData()
+	},
 	data() {
 		return {
 			plans: [],
@@ -84,6 +87,12 @@ export default {
 			sum: 0,
 		}
 	},
+	computed: {
+		...mapGetters({
+			activePlan: 'user/activePlan',
+			userId: 'user/userId',
+		}),
+	},
 	watch: {
 		$route(from, to) {
 			if (from.query.page !== to.query.page) {
@@ -94,12 +103,6 @@ export default {
 				this.fetchData()
 			}
 		},
-	},
-	computed: {
-		...mapGetters({
-			activePlan: 'user/activePlan',
-			userId: 'user/userId',
-		}),
 	},
 	methods: {
 		async fetchData() {
@@ -157,9 +160,6 @@ export default {
 				},
 			})
 		},
-	},
-	async fetch() {
-		await this.fetchData()
 	},
 }
 </script>

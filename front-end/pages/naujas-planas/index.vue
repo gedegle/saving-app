@@ -1,5 +1,6 @@
 <template>
-	<div class="choose-plan">
+	<loader v-if="!$auth.user || loadingAfterAdded" :loading="!$auth.user" />
+	<div v-else class="choose-plan">
 		<div class="choose-plan__info-wrapper">
 			<my-svg name="saving-pig" class="choose-plan__piggy" />
 			<p class="choose-plan__label">Suveskite duomenis</p>
@@ -45,6 +46,8 @@ export default {
 		return {
 			sum: null,
 			income: null,
+			loadingAfterAdded: false,
+			noBackground: true,
 		}
 	},
 	computed: {
@@ -53,17 +56,41 @@ export default {
 			activePlan: 'user/activePlan',
 		}),
 	},
+	watch: {
+		$route() {
+			if (this.$auth.user) {
+				this.noBackground = false
+			}
+		},
+	},
 	methods: {
-		createPlan() {
+		async createPlan() {
 			PlansApi.createPlan(this.sum, this.income, this.userId).then((res) => {
-				this.$router.push({
-					path: '/pagrindinis',
-					query: {
-						plan: res.data.id,
-					},
-				})
+				this.loadingAfterAdded = true
+				setTimeout(
+					() =>
+						this.$router.push({
+							path: '/pagrindinis',
+							query: {
+								plan: res.data.id,
+							},
+						}),
+					1000
+				)
+			})
+			this.loadingAfterAdded = false
+			await this.$store.dispatch('user/signInUser', {
+				email: this.$cookies.get('email'),
+				password: this.$cookies.get('password'),
 			})
 		},
+	},
+	head() {
+		return {
+			bodyAttrs: {
+				class: this.noBackground ? 'no-background' : '', // how to get classes already setted in default.vue like my has-navbar-fixed-top class
+			},
+		}
 	},
 }
 </script>

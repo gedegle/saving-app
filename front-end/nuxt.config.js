@@ -1,5 +1,9 @@
 /* eslint-disable */
 const SpriteLoaderPlugin = require('svg-sprite-loader/plugin')
+
+import Vue from 'vue'
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies)
 module.exports = {
 	// Global page headers (https://go.nuxtjs.dev/config-head)
 	head: {
@@ -11,6 +15,12 @@ module.exports = {
 		],
 		link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
 	},
+
+
+	router: {
+		middleware: ['auth']
+	},
+
 
 	// Global CSS (https://go.nuxtjs.dev/config-css)
 	css: ['~assets/scss/_variables.scss', '~assets/scss/_mixins.scss'],
@@ -34,6 +44,8 @@ module.exports = {
 	modules: [
 		// https://go.nuxtjs.dev/axios
 		'@nuxtjs/axios',
+		'@nuxtjs/auth',
+		'@nuxtjs/proxy',
 		'@nuxtjs/style-resources',
 		'@nuxtjs/eslint-module',
 		'nuxt-svg-loader',
@@ -46,7 +58,72 @@ module.exports = {
 	},
 
 	// Axios module configuration (https://go.nuxtjs.dev/config-axios)
-	axios: {},
+	axios: {
+		debug: true,
+		proxy: false,
+		credentials: false,
+		mode: 'cors'
+	},
+
+	auth: {
+		rewriteRedirects: true,
+		watchLoggedIn: false,
+		fullPathRedirect: true,
+		redirect: {
+			logout: '/login',
+			home: '/pagrindinis'
+		},
+		strategies: {
+			local: {
+				endpoints: {
+				  login: { url: 'http://localhost:8000/api/auth/login', method: 'post', propertyName: null, mode: 'cors' },
+				  logout: { url: 'http://localhost:8000/api/auth/logout', method: 'post', mode: 'cors' },
+				  user: { url: 'http://localhost:8000/api/auth/me', method: 'post',  propertyName: null, mode: 'cors' },
+				},
+				tokenRequired: true,
+				tokenType: 'bearer'
+			  }
+		}
+	},
+
+	
+	// auth: {
+	// 	rewriteRedirects: true,
+	// 	watchLoggedIn: false,
+	// 	fullPathRedirect: true,
+	// 	redirect: {
+	// 		logout: '/login',
+	// 		home: '/pagrindinis'
+	// 	},
+	// 	strategies: {
+	// 		// 'laravelJWT': {
+	// 		// 	provider: 'laravel/jwt',
+	// 		// 	url: 'http://localhost:8000',
+	// 		// 	endpoints: {
+	// 		// 		login: { url: '/laravel/auth/api/login', method: 'post', propertyName: null },
+	// 		// 		logout: { url: '/laravel/auth/api/logout', method: 'post' },
+	// 		// 		user: { url: '/laravel/auth/api/me', method: 'post',  propertyName: null},
+	// 		// 	},
+	// 		// 	token: {
+	// 		// 	  property: 'access_token',
+	// 		// 	  maxAge: 60 * 60
+	// 		// 	},
+	// 		// 	refreshToken: {
+	// 		// 	  maxAge: 20160 * 60
+	// 		// 	},
+	// 		//}
+	// 		local: {
+	// 		  endpoints: {
+	// 			login: { url: '/auth/api/login', method: 'post', propertyName: null },
+	// 			logout: { url: '/auth/api/logout', method: 'post' },
+	// 			user: { url: '/auth/api/me', method: 'post',  propertyName: null },
+	// 		  },
+	// 		  tokenRequired: true,
+	// 		  tokenType: 'Bearer'
+	// 		}
+	// 	}
+	// },
+
 
 	// Build Configuration (https://go.nuxtjs.dev/config-build)
 	build: {

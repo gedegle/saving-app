@@ -18,12 +18,12 @@ export default {
 
 		return data
 	},
-	async getPostsByPlan(planId, userId) {
-		const data = await link.get(`/posts-by-plan/${planId}/${userId}`)
+	async getPostsByPlan(planId) {
+		const data = await link.get(`/posts-by-plan/${planId}`)
 		return data
 	},
 	async login(email, password) {
-		const { data } = await link.post('/login/', {
+		const { data } = await link.post('/auth/login/', {
 			email,
 			password,
 		})
