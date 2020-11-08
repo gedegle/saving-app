@@ -53,7 +53,7 @@
 								/>
 								<p class="buttons__text">Naujas planas</p>
 							</div>
-							<div class="buttons__button">
+							<div class="buttons__button" @click="goToPage('/uzrasai')">
 								<my-svg
 									class="buttons__icon"
 									:class="{
@@ -88,8 +88,8 @@
 		</div>
 		<ModalSettings
 			v-if="isModalOpen"
-			:prop-name="user.name"
-			:prop-email="user.email"
+			:prop-name="$auth.user.name"
+			:prop-email="$auth.user.email"
 			@clicked="onClickSettings($event)"
 		/>
 	</div>
@@ -119,7 +119,6 @@ export default {
 			plans: 'user/plans',
 			activePlanIndex: 'user/activePlanIndex',
 			activePlan: 'user/activePlan',
-			user: 'user/userData',
 		}),
 	},
 	watch: {

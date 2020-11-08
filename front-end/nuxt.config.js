@@ -71,13 +71,24 @@ module.exports = {
 		fullPathRedirect: true,
 		redirect: {
 			logout: '/login',
-			home: '/pagrindinis'
+			home: '/pagrindinis',
 		},
 		strategies: {
 			local: {
+				token: {
+					property: 'access_token',
+					maxAge: 1800,
+					type: 'bearer'
+				  },
+				  refreshToken: {
+					property: 'refresh_token',
+					data: 'refresh_token',
+					maxAge: 60 * 60 * 24 * 30
+				  },
 				endpoints: {
-				  login: { url: 'http://localhost:8000/api/auth/login', method: 'post', propertyName: null, mode: 'cors' },
-				  logout: { url: 'http://localhost:8000/api/auth/logout', method: 'post', mode: 'cors' },
+				  login: { url: 'http://localhost:8000/api/auth/login', method: 'post', mode: 'cors', propertyName: 'access_token' },
+				  logout: { url: 'http://localhost:8000/api/auth/logout', method: 'post' },
+				  logout: false,
 				  user: { url: 'http://localhost:8000/api/auth/me', method: 'post',  propertyName: null, mode: 'cors' },
 				},
 				tokenRequired: true,

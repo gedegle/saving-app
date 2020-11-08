@@ -39,7 +39,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import PlansApi from '~/utils/PlansApi'
 
 export default {
@@ -64,18 +63,13 @@ export default {
 			password: '',
 		}
 	},
-	computed: {
-		...mapGetters({
-			userId: 'user/userId',
-		}),
-	},
 	methods: {
 		onClickButton() {
 			this.$emit('clicked', false)
 		},
 		addNew() {
 			PlansApi.updateProfile({
-				id: this.userId,
+				id: this.$auth.user.id,
 				name: this.name,
 				email: this.email,
 			})
@@ -84,7 +78,7 @@ export default {
 		},
 		changePassword() {
 			PlansApi.updatePassword({
-				id: this.userId,
+				id: this.$auth.user.id,
 				password: this.password,
 			})
 			setTimeout(() => this.$store.dispatch('user/refetchUserData'), 1000)

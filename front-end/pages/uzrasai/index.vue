@@ -1,37 +1,27 @@
 <template>
-	<div class="archive">
-		<table class="archive__content-table">
-			<thead>
-				<tr class="archive__table-head">
-					<th class="archive__table-head-cell">Suma, €</th>
-					<th class="archive__table-head-cell">Mėnesio pajamos, €</th>
-					<th class="archive__table-head-cell">Sutaupyta</th>
-					<th class="archive__table-head-cell">Veiksmai</th>
-				</tr>
-			</thead>
-			<tbody class="archive__table-body">
-				<tr
-					v-for="(item, index) in plans"
-					:key="`plan-${index}`"
-					class="archive__table-body-row"
-				>
-					<td class="archive__table-body-cell">{{ item.sum }}</td>
-					<td class="archive__table-body-cell">{{ item.income }}</td>
-					<td class="archive__table-body-cell">
+	<div class="notes">
+		<div class="notes__wrapper">
+			<table class="notes__content-table">
+				<tbody class="notes__table-body">
+					<tr
+						v-for="(item, index) in notes"
+						:key="`note-${index}`"
+						class="notes__table-body-row"
+					>
+						<div class="notes__note-wrapper" @click="openNote(item)">
+							<p class="notes__note-title">{{ item.title }}</p>
+							<p class="notes__note-content">{{ item.note.slice(0, 100) }}...</p>
+						</div>
 						<my-svg
-							v-if="item.if_saved === 1"
-							class="archive__table-body-cell-icon archive__table-body-cell-icon--check"
-							name="check"
+							name="delete"
+							class="notes__delete-button"
+							@click="deleteNote(item)"
 						/>
-						<my-svg
-							v-else
-							class="archive__table-body-cell-icon archive__table-body-cell-icon--minus"
-							name="minus"
-						/>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+					</tr>
+				</tbody>
+			</table>
+			<my-svg name="plus-filled" class="notes__add-button" @click="openNewModal" />
+		</div>
 		<div class="pagination">
 			<button
 				class="pagination__button"
@@ -48,31 +38,42 @@
 				Kitas
 			</button>
 		</div>
+		<ModalNote
+			v-if="isNoteOpen"
+			:note="openedNote"
+			@clicked="onClickClose($event)"
+		/>
+		<ModalNewNote v-if="isModalNewOpen" @clicked="onClickClose($event)" />
 	</div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import PlansApi from '@/utils/PlansApi.js'
+import ModalNote from '@/components/ModalNote.vue'
+import ModalNewNote from '@/components/ModalNewNote.vue'
 
 export default {
+	components: {
+		ModalNote,
+		ModalNewNote,
+	},
 	async fetch() {
 		await this.fetchData()
 	},
 	data() {
 		return {
-			plans: [],
+			notes: [],
 			nextPage: 1,
 			prevPage: 1,
-			planId: null,
-			income: '',
-			sum: 0,
+			isNoteOpen: false,
+			openedNote: {},
+			isModalNewOpen: false,
 		}
 	},
 	computed: {
 		...mapGetters({
 			activePlan: 'user/activePlan',
-			userId: 'user/userId',
 		}),
 	},
 	watch: {
@@ -88,11 +89,8 @@ export default {
 	},
 	methods: {
 		async fetchData() {
-			await PlansApi.getArchivedUserPlans(
-				this.userId,
-				parseInt(this.$route.query.page) || 1
-			).then((res) => {
-				this.plans = res.data
+			await PlansApi.getUserNotes(this.$auth.user.id).then((res) => {
+				this.notes = res.data
 				const totalPages = Math.ceil(res.total / 7)
 
 				if (totalPages > 1) {
@@ -120,9 +118,25 @@ export default {
 				}
 			})
 		},
+		deleteNote(note) {
+			PlansApi.deleteNote(note.id)
+			setTimeout(() => this.fetchData(), 500)
+		},
+		onClickClose(value) {
+			this.isNoteOpen = value
+			this.isModalNewOpen = value
+			setTimeout(() => this.fetchData(), 500)
+		},
+		openNote(note) {
+			this.isNoteOpen = true
+			this.openedNote = note
+		},
+		openNewModal(note) {
+			this.isModalNewOpen = true
+		},
 		goToNextPage() {
 			this.$router.push({
-				path: '/archyvas',
+				path: '/uzrasai',
 				query: {
 					page: this.nextPage,
 				},
@@ -130,7 +144,7 @@ export default {
 		},
 		goToPrevPage() {
 			this.$router.push({
-				path: '/archyvas',
+				path: '/uzrasai',
 				query: {
 					page: this.prevPage,
 				},
@@ -143,12 +157,20 @@ export default {
 <style lang="scss" scoped>
 @import '~assets/scss/_mixins.scss';
 
-.archive {
+.notes {
 	background-color: white;
 	border-radius: 10px;
 	height: 700px;
 	display: flex;
 	flex-direction: column;
+	justify-content: space-between;
+	padding: 30px 30px 0 30px;
+
+	&__wrapper {
+		&:not(.s) {
+			display: flex;
+		}
+	}
 
 	&__content-table {
 		border-collapse: separate;
@@ -157,16 +179,19 @@ export default {
 		flex-grow: 1;
 		margin: 0;
 		max-width: 1200px;
-		padding: 30px 30px 0 30px;
 		position: relative;
 		table-layout: fixed;
 		width: 100%;
 		height: auto;
+		margin-right: 60px;
 	}
 
 	&__table-body-row {
 		border-radius: 5px;
 		height: 60px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 
 		@include shadow($color-cell-shadow);
 		@include transition(all, 0.3s);
@@ -178,47 +203,47 @@ export default {
 		}
 	}
 
-	&__table-head {
-		font-size: 12px;
-		position: sticky;
-		text-align: left;
-		color: $color-grey--900;
-	}
-
-	&__table-head-cell {
-		padding-left: 10px;
-	}
-
-	&__table-body-cell {
-		padding: 10px;
-
-		&--actions {
-			display: flex;
-			height: 100%;
-			align-items: center;
+	&__note-wrapper {
+		&:not(.s) {
+			padding: 0 20px;
+			cursor: pointer;
+			border-left: 10px solid $color-purple-primary;
+			margin: 10px 0 10px 15px;
 		}
 	}
 
-	&__plan-icon {
-		width: 25px;
-		height: 25px;
+	&__note-title {
+		font-weight: 700;
+		font-size: 18px;
+	}
+
+	&__note-content {
+		font-size: 14px;
+	}
+
+	&__add-button {
 		cursor: pointer;
-		color: $color-grey--900;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		color: #7045ff;
+		box-shadow: 0 0 10px 0 #b4b2b2;
+		margin-left: auto;
+		margin-bottom: 15px;
+		position: fixed;
+		left: calc(100% - 226px);
+	}
+
+	&__delete-button {
+		width: 20px;
+		height: 15px;
+		cursor: pointer;
+		margin-right: 25px;
 
 		&:hover,
 		&:focus {
-			color: $color-purple-primary;
+			color: red;
 		}
-
-		&:first-child {
-			margin-right: 10px;
-			padding-right: 10px;
-		}
-	}
-
-	&__table-body-cell-icon {
-		width: 20px;
-		height: 20px;
 	}
 }
 

@@ -115,7 +115,7 @@ export default {
 			return this.getMaxThree(this.sumedPosts)
 		},
 		sumedPosts() {
-			if (!this.posts) {
+			if (!this.posts.length) {
 				return []
 			}
 			const arr = this.posts

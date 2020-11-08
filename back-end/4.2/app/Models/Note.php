@@ -16,7 +16,7 @@ class Note extends Model
      * @var array
      */
     protected $fillable = [
-        'note',
+        'note','title'
     ];
 
     /**

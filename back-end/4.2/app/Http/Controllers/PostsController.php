@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Post;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Resources\Post as PostResource;
 use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
+use \stdClass;
+use Illuminate\Support\Arr;
 
 class PostsController extends Controller
 {
@@ -35,6 +37,26 @@ class PostsController extends Controller
         return New PostResource($posts);
     }
 
+    public function stats($plan_id) {
+        $posts = Post::where('plan_id', '=', $plan_id)->get();
+
+        foreach ($posts as $post)
+        {
+            $count=Post::where('plan_id', '=', $plan_id)
+            ->select('type', DB::raw('count(*) as count'))
+            ->groupBy('type')
+            ->get();
+            $data[$post->type]=$count;
+        }
+        
+        $data = Arr::flatten($data);
+        $newArr=array_unique($data);
+        foreach ($newArr as $dd){
+            $new[$dd->type]=$dd->count;
+        }
+        return $new;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -53,7 +75,7 @@ class PostsController extends Controller
         $post->plan_id = $request->input('plan_id');
 
         if($post->save()){
-            return new PostResource($post);
+            return ['data' => $post];
         }
     }
 

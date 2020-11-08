@@ -2,10 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NotesController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PlansController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\AuthController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -59,18 +61,6 @@ Route::post('plan',[PlansController::class,'store']);
 Route::put('plan/{id}',[PlansController::class,'update']);
 
 
-//List notes
-Route::get('notes',[PlansController::class,'NotesController@index']);
-//create new note
-Route::post('note',[PlansController::class,'NotesController@store']);
-//update note
-Route::put('note',[PlansController::class,'NotesController@update']);
-//List signle note
-Route::get('note/{id}',[PlansController::class,'NotesController@show']);
-//delete note
-Route::delete('note/{id}',[PlansController::class,'NotesController@destroy']);
-
-
 //List posts
 Route::get('posts',[PostsController::class, 'index']);
 Route::get('posts-all',[PostsController::class,'indexAll']);
@@ -91,15 +81,26 @@ Route::delete('post/{id}',[PostsController::class,'destroy']);
 
 //all post by post id
 Route::get('posts-by-plan/{planId}',[PostsController::class,'showAllByPlan']);
+Route::get('stats/{planId}',[PostsController::class,'stats']);
 
+
+//List notes
+Route::get('notes/{user_id}',[NotesController::class,'index']);
+//create new note
+Route::post('note',[NotesController::class,'store']);
+//update note
+Route::put('note',[NotesController::class,'update']);
+//List signle note
+Route::get('note/{id}',[NotesController::class,'show']);
+//delete note
+Route::delete('note/{id}',[NotesController::class,'destroy']);
 });
 /**
  * Login Route(s)
  */
 
 Route::group([
-
-    'middleware' => ['jwt.auth', 'cors:api'],
+    'middleware' => ['api', 'cors:api'],
     'prefix' => 'auth'
 
 ], function ($router) {

@@ -6,6 +6,16 @@ const link = axios.create({
 	withCredentials: false,
 })
 export default {
+	async getUserNotes(id) {
+		const { data } = await link.get(`/notes/${id}`)
+
+		return data
+	},
+	async getNoteById(id) {
+		const { data } = await link.get(`/note/${id}`)
+
+		return data
+	},
 	async getActiveUserPlans(id) {
 		const { data } = await link.get(`/user-plans/active/${id}`)
 
@@ -19,7 +29,7 @@ export default {
 		return data
 	},
 	async getPostsByPlan(planId) {
-		const data = await link.get(`/posts-by-plan/${planId}`)
+		const { data } = await link.get(`/posts-by-plan/${planId}`)
 		return data
 	},
 	async login(email, password) {
@@ -49,6 +59,15 @@ export default {
 	},
 	updatePost(id, post) {
 		link.put(`/post/${id}`, post)
+	},
+	updateNote(data) {
+		link.put('/note', data)
+	},
+	deleteNote(id) {
+		link.delete(`/note/${id}`)
+	},
+	addNote(data) {
+		link.post('/note', data)
 	},
 	deletePost(id) {
 		link.delete(`/post/${id}`)

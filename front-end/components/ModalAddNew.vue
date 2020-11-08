@@ -128,7 +128,7 @@ export default {
 				})
 			} else {
 				PlansApi.addNewPost(
-					this.$store.state.user.user.id,
+					this.$auth.user.id,
 					this.date,
 					this.sum,
 					this.activePlan,

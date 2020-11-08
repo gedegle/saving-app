@@ -3,21 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Notes;
+use App\Models\Note;
 use App\Http\Resources\Notes as NotesResource;
 use App\Http\Requests;
 
-class UsersController extends Controller
+class NotesController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($user_id)
     {
         //get users
-        $notes = Notes::paginate(9);
+        $notes = Note::where('user_id', '=', $user_id)->paginate(9);
 
         //return collection of users as a resource
 
@@ -32,22 +32,32 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        $note = $request -> isMethod('put') ? Notes::findOrFail($request -> id) : new Notes;
+        $note = $request -> isMethod('put') ? Notes::findOrFail($request -> id) : new Note;
 
         $note->id = $request->input('id');
         $note->user_id = $request->input('user_id');
-        $note->note = $request->input('name');
+        $note->note = $request->input('note');
+        $note->title = $request->input('title');
 
         if($note->save()){
-            return new NotesResource($note);
+            return ['data' =>$note];
         }
     }
 
     public function update(Request $request){
-        $note = Notes::findOrFail($request -> id);
-        $note->note = $request->input('name');
-        $note->save();
-        return new NotesResource($note);
+        $note = Note::findOrFail($request -> id);
+        $this->validate($request, [
+            'note' => 'required',
+            'title' => 'required',
+        ]);
+
+        $input = $request->all();
+    
+        $note->fill($input)->save();
+
+        if($note->save()){
+            return ['data' => $note];
+        }
     }
 
  
@@ -60,10 +70,10 @@ class UsersController extends Controller
     public function show($id)
     {
         //get notes
-        $note = Notes::findOrFail($id);
+        $note = Note::findOrFail($id);
 
         //return single user as a resource
-        return new NotesResource($note);
+        return ['data' => $note];
     }
 
     /**
@@ -75,11 +85,11 @@ class UsersController extends Controller
     public function destroy($id)
     {
         //destroy user
-        $note = Notes::findOrFail($id);
+        $note = Note::findOrFail($id);
 
         //return single user as a resource
         if($note->delete()){
-            return new NotesResource($note);
+            return ['data' => $note];
         }
 
     }

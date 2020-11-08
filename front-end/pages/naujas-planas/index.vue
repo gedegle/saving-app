@@ -52,7 +52,6 @@ export default {
 	},
 	computed: {
 		...mapGetters({
-			userId: 'user/userId',
 			activePlan: 'user/activePlan',
 		}),
 	},
@@ -64,25 +63,23 @@ export default {
 		},
 	},
 	methods: {
-		async createPlan() {
-			PlansApi.createPlan(this.sum, this.income, this.userId).then((res) => {
-				this.loadingAfterAdded = true
-				setTimeout(
-					() =>
-						this.$router.push({
-							path: '/pagrindinis',
-							query: {
-								plan: res.data.id,
-							},
-						}),
-					1000
-				)
-			})
+		createPlan() {
+			PlansApi.createPlan(this.sum, this.income, this.$auth.user.id).then(
+				(res) => {
+					this.loadingAfterAdded = true
+					setTimeout(
+						() =>
+							this.$router.push({
+								path: '/pagrindinis',
+								query: {
+									plan: res.data.id,
+								},
+							}),
+						1000
+					)
+				}
+			)
 			this.loadingAfterAdded = false
-			await this.$store.dispatch('user/signInUser', {
-				email: this.$cookies.get('email'),
-				password: this.$cookies.get('password'),
-			})
 		},
 	},
 	head() {

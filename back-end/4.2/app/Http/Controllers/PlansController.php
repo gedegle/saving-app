@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Plan;
+use App\Models\Plan;
 use Illuminate\Http\Request;
 use App\Http\Resources\Plan as PlanResource;
 
@@ -61,7 +61,7 @@ class PlansController extends Controller
         $plan->if_saved = $request->input('if_saved');
 
         if($plan->save()){
-            return new PlanResource($plan);
+            return ['data' => $plan];
         }
 
     }
@@ -79,7 +79,7 @@ class PlansController extends Controller
         $plan = Plan::findOrFail($id);
 
         //return single post as a resource
-        return new PlanResource($plan);
+        return New PlanResource($plan);
     }
     public function showByUserActive($user_id)
     {
@@ -87,7 +87,7 @@ class PlansController extends Controller
         $plans = Plan::where('user_id', '=', $user_id)->where('status', '=', 1)->paginate(7);
 
         //return single post as a resource
-        return new PlanResource($plans);
+        return New PlanResource($plans);
     }
 
     public function showByUserArchived($user_id)
@@ -96,7 +96,7 @@ class PlansController extends Controller
         $plans = Plan::where('user_id', '=', $user_id)->where('status', '=', 0)->paginate(9);
 
         //return single post as a resource
-        return new PlanResource($plans);
+        return New PlanResource($plans);
     }
 
     /**
@@ -132,7 +132,7 @@ class PlansController extends Controller
         $plan->fill($input)->save();
 
         if($plan->save()){
-            return new PlanResource($plan);
+            return ['data' => $plan];
         }
     }
 
@@ -149,7 +149,7 @@ class PlansController extends Controller
 
         //return single post as a resource
         if($plan->delete()){
-            return new PlanResource($plan);
+            return New PlanResource($plan);
         }
     }
 }

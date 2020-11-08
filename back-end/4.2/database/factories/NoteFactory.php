@@ -25,6 +25,7 @@ class NoteFactory extends Factory
         $user_ids = User::pluck('id');
         return [
             'note' => $this->faker->realText(),
+            'title' => $this->faker->sentence($nbWords = 4, $variableNbWords = true),
             'user_id' => $user_ids->random(),
         ];
     }

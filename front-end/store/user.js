@@ -4,7 +4,6 @@ import VueCookies from 'vue-cookies'
 export const namespaced = true
 Vue.use(VueCookies)
 export const state = () => ({
-	user: {},
 	validPlans: [],
 	activePlan: {
 		id: null,
@@ -15,8 +14,6 @@ export const state = () => ({
 })
 
 export const getters = {
-	userData: (userState) => userState.user,
-	userId: (userState) => userState.user.id,
 	posts: (userState) => userState.activePosts,
 	plans: (userState) => userState.validPlans,
 	activePlan: (userState) => userState.activePlan?.id,
@@ -24,11 +21,9 @@ export const getters = {
 	selectedDate: (userState) => userState.selectedDate,
 }
 export const actions = {
-	async setUser({ state: userState, commit }, { user } = {}) {
-		const plans = await PlanApi.getActiveUserPlans(user.id)
-		commit('setUser', user)
-		commit('updatePlanList', plans.data)
-		this.$auth.fetchUser()
+	async setUser({ state: userState, commit }) {
+		const { data } = await PlanApi.getActiveUserPlans(this.$auth.user.id)
+		commit('updatePlanList', data)
 
 		const posts = await PlanApi.getPostsByPlan(userState.activePlan.id)
 
@@ -37,23 +32,20 @@ export const actions = {
 		userState.refetchData = false
 	},
 	async signInUser({ state: userState, commit }, { email, password } = {}) {
-		const { data } = await this.$auth.loginWith('local', {
+		await this.$auth.loginWith('local', {
 			data: { email, password },
 		})
-		this.$auth.setUser(data.data)
-		if (data.data.planCount === 0) {
+		if (this.$auth.user.planCount === 0) {
 			this.$router.push('/naujas-planas')
 		}
-		Vue.$cookies.set('password', password)
-		Vue.$cookies.set('email', email)
-		const plans = await PlanApi.getActiveUserPlans(data.data.id)
-		commit('setUser', data.data)
+		const plans = await PlanApi.getActiveUserPlans(this.$auth.user.id)
+		commit('setUser', this.$auth.user)
 		commit('updatePlanList', plans.data)
 
 		userState.refetchData = false
 	},
 	async fetchPlans({ state: userState, commit }) {
-		const { data } = await PlanApi.getActiveUserPlans(userState.user.id)
+		const { data } = await PlanApi.getActiveUserPlans(this.$auth.user.id)
 
 		commit('updatePlanList', data)
 	},
@@ -61,7 +53,7 @@ export const actions = {
 	async fetchPosts({ state: userState, commit }) {
 		const { data } = await PlanApi.getPostsByPlan(
 			userState.activePlan?.id,
-			userState.user.id
+			this.$auth.user.id
 		)
 
 		commit('updatePostList', data)

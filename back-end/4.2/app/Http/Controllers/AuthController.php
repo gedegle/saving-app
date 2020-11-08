@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use DB;
 
 class AuthController extends Controller
 {
@@ -40,7 +41,11 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        $user = auth()->user();
+        $user_id = $user->id;
+        $count = DB::table('plans')->where('user_id', '=', $user_id)->where('status', '=', 1)->count();
+        $user->setAttribute('planCount', $count);
+        return $user;
     }
 
     /**

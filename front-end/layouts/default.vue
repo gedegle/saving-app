@@ -8,10 +8,6 @@
 	</div>
 </template>
 <script>
-import Vue from 'vue'
-import VueCookies from 'vue-cookies'
-import PlansApi from '~/utils/PlansApi'
-Vue.use(VueCookies)
 export default {
 	computed: {
 		showNavigation() {
@@ -27,30 +23,19 @@ export default {
 		},
 	},
 	watch: {
-		$route() {
+		async $route() {
 			if (this.$auth.user.planCount === 0) {
 				this.$router.push('naujas-planas')
+			} else if (!this.$store.state.user.activePlanIndex) {
+				await this.$store.dispatch('user/setUser')
 			}
 		},
 	},
 	async mounted() {
-		await this.$store.dispatch('user/signInUser', {
-			email: this.$cookies.get('email'),
-			password: this.$cookies.get('password'),
-		})
-
-		const plans = this.$store.state.user.validPlans
-		const planId = this.$route.query.plan
-			? parseInt(this.$route.query.plan)
-			: plans[0]?.id
-		const { data } = await PlansApi.getPostsByPlan(planId)
-
-		this.$store.commit('user/updatePostList', data)
-		if (plans.length) {
-			this.$store.commit(
-				'user/setActivePlan',
-				plans.find((item) => item.id === planId)
-			)
+		if (this.$auth.user.planCount === 0) {
+			this.$router.push('naujas-planas')
+		} else if (!this.$store.state.user.activePlanIndex) {
+			await this.$store.dispatch('user/setUser')
 		}
 	},
 	middleware: ['redirectToNewPlan'],
