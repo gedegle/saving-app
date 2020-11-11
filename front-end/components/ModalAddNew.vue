@@ -53,9 +53,11 @@
 <script>
 import { postTypes } from '@/utils/constants.js'
 import { mapGetters } from 'vuex'
+import calculateSavings from '@/mixins/calculateSavings.js'
 import PlansApi from '~/utils/PlansApi'
 
 export default {
+	mixins: [calculateSavings],
 	props: {
 		dialog: {
 			type: Boolean,
@@ -98,6 +100,9 @@ export default {
 		...mapGetters({
 			posts: 'user/posts',
 			activePlan: 'user/activePlan',
+			activePlanIndex: 'user/activePlanIndex',
+			activePosts: 'user/posts',
+			plans: 'user/plans',
 		}),
 		typesWithSubs() {
 			const keys = Object.keys(this.postTypes).filter(
@@ -135,7 +140,13 @@ export default {
 					this.type
 				)
 			}
-			setTimeout(() => this.$store.dispatch('user/refetchUserData'), 500)
+			setTimeout(() => {
+				this.$store.dispatch('user/refetchUserData')
+				setTimeout(
+					() => this.calculateSavings(this.plans[this.activePlanIndex]),
+					500
+				)
+			}, 500)
 			this.onClickButton()
 		},
 	},

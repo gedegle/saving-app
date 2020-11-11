@@ -2,6 +2,7 @@
 	<div class="history">
 		<div class="history__buttons-wrapper">
 			<input
+				v-model="date"
 				type="date"
 				class="history__date-picker"
 				@change="selectDate($event.target.value)"
@@ -78,11 +79,13 @@
 import ModalAddNew from '@/components/ModalAddNew.vue'
 import PlansApi from '@/utils/PlansApi.js'
 import { mapGetters } from 'vuex'
+import calculateSavings from '@/mixins/calculateSavings.js'
 
 export default {
 	components: {
 		ModalAddNew,
 	},
+	mixins: [calculateSavings],
 	async fetch() {
 		await this.fetchData()
 	},
@@ -93,7 +96,7 @@ export default {
 			prevPage: 1,
 			isModalNewOpen: false,
 			postId: null,
-			date: '',
+			date: this.$route.query.date || '',
 			type: '',
 			sum: 0,
 			toEdit: true,
@@ -103,7 +106,10 @@ export default {
 	computed: {
 		...mapGetters({
 			activePlan: 'user/activePlan',
+			activePlanIndex: 'user/activePlanIndex',
 			selectedDate: 'user/selectedDate',
+			activePosts: 'user/posts',
+			plans: 'user/plans',
 		}),
 	},
 	watch: {
@@ -186,7 +192,13 @@ export default {
 		},
 		deletePost(id) {
 			PlansApi.deletePost(id)
-			setTimeout(() => this.fetchData(), 700)
+			setTimeout(() => {
+				this.fetchData()
+				setTimeout(
+					() => this.calculateSavings(this.plans[this.activePlanIndex]),
+					700
+				)
+			}, 700)
 		},
 		goToNextPage() {
 			this.$router.push({

@@ -6,7 +6,6 @@
 					<th class="archive__table-head-cell">Suma, €</th>
 					<th class="archive__table-head-cell">Mėnesio pajamos, €</th>
 					<th class="archive__table-head-cell">Sutaupyta</th>
-					<th class="archive__table-head-cell">Veiksmai</th>
 				</tr>
 			</thead>
 			<tbody class="archive__table-body">
@@ -72,7 +71,6 @@ export default {
 	computed: {
 		...mapGetters({
 			activePlan: 'user/activePlan',
-			userId: 'user/userId',
 		}),
 	},
 	watch: {
@@ -89,7 +87,7 @@ export default {
 	methods: {
 		async fetchData() {
 			await PlansApi.getArchivedUserPlans(
-				this.userId,
+				this.$auth.user.id,
 				parseInt(this.$route.query.page) || 1
 			).then((res) => {
 				this.plans = res.data

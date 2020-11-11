@@ -39,22 +39,24 @@ class PostsController extends Controller
 
     public function stats($plan_id) {
         $posts = Post::where('plan_id', '=', $plan_id)->get();
-
         foreach ($posts as $post)
         {
-            $count=Post::where('plan_id', '=', $plan_id)
-            ->select('type', DB::raw('count(*) as count'))
-            ->groupBy('type')
+            $sum=Post::where('plan_id', '=', $plan_id)
+            ->orderBy('date', 'asc')
+            ->select(DB::raw('MONTHNAME(date) month'), DB::raw('sum(sum) as total'))
+            ->groupBy(DB::raw('month'))
             ->get();
-            $data[$post->type]=$count;
+            $data[$post->date]=$sum;
         }
-        
+        if (isset($data)) {
         $data = Arr::flatten($data);
         $newArr=array_unique($data);
         foreach ($newArr as $dd){
-            $new[$dd->type]=$dd->count;
+            $new[$dd->month]=$dd->total;
         }
         return $new;
+    }
+    return [];
     }
 
     /**
@@ -150,7 +152,7 @@ class PostsController extends Controller
 
         //return single post as a resource
         if($post->delete()){
-            return new PostResource($post);
+            return ['data' => $post];
         }
 
     }

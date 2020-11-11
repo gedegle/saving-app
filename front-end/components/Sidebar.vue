@@ -97,12 +97,14 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import calculateSavings from '@/mixins/calculateSavings.js'
 import ModalSettings from './ModalSettings.vue'
 
 export default {
 	components: {
 		ModalSettings,
 	},
+	mixins: [calculateSavings],
 	props: {
 		removePlanHighligh: {
 			type: Boolean,
@@ -119,6 +121,7 @@ export default {
 			plans: 'user/plans',
 			activePlanIndex: 'user/activePlanIndex',
 			activePlan: 'user/activePlan',
+			activePosts: 'user/posts',
 		}),
 	},
 	watch: {
@@ -139,9 +142,14 @@ export default {
 				)
 				this.$store.commit('user/setActivePlan', activePlan)
 				this.$store.dispatch('user/refetchUserData')
+				setTimeout(
+					() => this.calculateSavings(this.plans[this.activePlanIndex]),
+					700
+				)
 			} else if (this.plans.length) {
 				this.$store.commit('user/setActivePlan', this.plans[0])
 				this.$store.dispatch('user/refetchUserData')
+				setTimeout(() => this.calculateSavings(this.plans[0]), 700)
 			} else {
 				this.redirectToNewPlan = true
 			}
@@ -155,6 +163,10 @@ export default {
 				},
 			})
 			this.$store.dispatch('user/refetchUserData')
+			setTimeout(
+				() => this.calculateSavings(this.plans[this.activePlanIndex]),
+				700
+			)
 		},
 		goToPage(path) {
 			if (this.plans.length < 3) {
@@ -298,7 +310,7 @@ export default {
 		}
 
 		&--disabled {
-			cursor: unset;
+			cursor: not-allowed;
 
 			&:hover,
 			&:focus {

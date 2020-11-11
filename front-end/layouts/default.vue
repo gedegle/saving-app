@@ -8,7 +8,11 @@
 	</div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
+import calculateSavings from '@/mixins/calculateSavings.js'
+
 export default {
+	mixins: [calculateSavings],
 	computed: {
 		showNavigation() {
 			if (
@@ -21,12 +25,18 @@ export default {
 			}
 			return true
 		},
+		...mapGetters({
+			plans: 'user/plans',
+			activePlanIndex: 'user/activePlanIndex',
+			activePlan: 'user/activePlan',
+			activePosts: 'user/posts',
+		}),
 	},
 	watch: {
 		async $route() {
 			if (this.$auth.user.planCount === 0) {
 				this.$router.push('naujas-planas')
-			} else if (!this.$store.state.user.activePlanIndex) {
+			} else if (!this.activePlanIndex) {
 				await this.$store.dispatch('user/setUser')
 			}
 		},
@@ -34,9 +44,37 @@ export default {
 	async mounted() {
 		if (this.$auth.user.planCount === 0) {
 			this.$router.push('naujas-planas')
-		} else if (!this.$store.state.user.activePlanIndex) {
+		} else if (!this.activePlanIndex) {
 			await this.$store.dispatch('user/setUser')
+			this.setActivePlan()
 		}
+	},
+	methods: {
+		setActivePlan() {
+			if (this.$route.query.plan) {
+				const [activePlan] = this.plans.filter(
+					(item) => item.id === parseInt(this.$route.query.plan)
+				)
+				this.$store.commit('user/setActivePlan', activePlan)
+				this.$store.dispatch('user/refetchUserData')
+				setTimeout(() => {
+					this.$store.dispatch('user/refetchUserData')
+					setTimeout(
+						() => this.calculateSavings(this.plans[this.activePlanIndex]),
+						700
+					)
+				}, 500)
+			} else if (this.plans.length) {
+				this.$store.commit('user/setActivePlan', this.plans[0])
+				this.$store.dispatch('user/refetchUserData')
+				setTimeout(() => {
+					this.$store.dispatch('user/refetchUserData')
+					setTimeout(() => this.calculateSavings(this.plans[0]), 700)
+				}, 500)
+			} else {
+				this.redirectToNewPlan = true
+			}
+		},
 	},
 	middleware: ['redirectToNewPlan'],
 }

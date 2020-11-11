@@ -20,10 +20,10 @@
 									<span> € </span>{{ savedAmount }}
 								</p>
 							</div>
-							<p class="dashboard__left-to-save">
-								Liko sutaypyti:
-								<span> € </span>{{ leftToSave }}
-							</p>
+							<div class="dashboard__left-to-save">
+								<p>Liko sutaypyti: <span> € </span>{{ leftToSave }}</p>
+								<p>Bus sutaupyta iki: {{ dateTilSaved }}</p>
+							</div>
 						</div>
 						<my-svg
 							class="dashboard__new-entry-button"
@@ -92,8 +92,6 @@ export default {
 	data() {
 		return {
 			isModalNewOpen: false,
-			savedAmount: 40,
-			totalSavingAmount: 100,
 			focus: '',
 			dayTitle: new Date().toLocaleString('lt', { month: 'long' }) + ' ' + 2020,
 		}
@@ -104,12 +102,13 @@ export default {
 			activePlan: 'user/activePlan',
 			plans: 'user/plans',
 			activePlanIndex: 'user/activePlanIndex',
+			savedAmount: 'user/savedAmount',
+			totalSavingAmount: 'user/totalSavingAmount',
+			leftToSave: 'user/leftToSave',
+			dateTilSaved: 'user/dateTilSaved',
 		}),
 		savingsValue() {
 			return (this.savedAmount * 100) / this.totalSavingAmount
-		},
-		leftToSave() {
-			return this.totalSavingAmount - this.savedAmount
 		},
 		topExpenses() {
 			return this.getMaxThree(this.sumedPosts)
@@ -135,6 +134,17 @@ export default {
 		},
 		recommends() {
 			return this.getMaxThreeReccomends(this.sumedPosts)
+		},
+	},
+	watch: {
+		focus() {
+			this.$router.push({
+				path: '/istorija',
+				query: {
+					plan: this.activePlan,
+					date: this.focus,
+				},
+			})
 		},
 	},
 	mounted() {
@@ -291,6 +301,9 @@ export default {
 
 	&__left-to-save {
 		color: $color-grey--700;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 
 		span {
 			margin-right: -4px;

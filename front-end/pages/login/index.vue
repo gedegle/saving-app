@@ -77,7 +77,8 @@
 							<span @click="toRegister = true">Registruokis</span>
 						</div>
 						<div class="signin__button-wrapper">
-							<button class="signin__button" type="submit">
+							<spinner-loader v-if="loading" />
+							<button v-else class="signin__button" type="submit">
 								{{ toRegister ? 'Registruotis' : 'Prisijungti' }}
 							</button>
 						</div>
@@ -85,11 +86,17 @@
 				</transition>
 			</form>
 		</div>
+		<transition name="mode-fade" mode="in-out">
+			<div v-show="showError" class="toast">
+				{{ errorText }}
+			</div>
+		</transition>
 	</div>
 </template>
 
 <script>
 /* eslint-disable no-tabs */
+import PlansApi from '@/utils/PlansApi'
 
 export default {
 	layout: 'empty',
@@ -100,6 +107,9 @@ export default {
 			password: '',
 			password2: '',
 			toRegister: false,
+			showError: false,
+			errorText: '',
+			loading: false,
 		}
 	},
 	computed: {
@@ -109,20 +119,74 @@ export default {
 	},
 	methods: {
 		async signIn() {
-			await this.$store
-				.dispatch('user/signInUser', {
+			this.showError = false
+			this.loading = true
+			try {
+				await this.$store
+					.dispatch('user/signInUser', {
+						email: this.email,
+						password: this.password,
+					})
+					.then(() => {
+						this.loading = false
+						if (this.$auth.planCount === 0) {
+							this.$router.push({
+								path: '/naujas-planas',
+							})
+						} else {
+							this.$router.push(this.actionLink)
+						}
+					})
+			} catch {
+				this.errorText = 'Prisijungimas nepavyko'
+				this.showError = true
+				this.loading = false
+				setTimeout(() => {
+					this.showError = false
+				}, 6000)
+			}
+		},
+		async signUp() {
+			if (this.password !== this.password2) {
+				this.showError = true
+				this.errorText = 'Slaptažodžiai turi sutapti'
+				setTimeout(() => {
+					this.showError = false
+				}, 6000)
+				return
+			}
+			try {
+				const { data } = await PlansApi.register({
+					name: this.name,
 					email: this.email,
 					password: this.password,
 				})
-				.then(() => {
-					if (this.$auth.planCount === 0) {
-						this.$router.push({
-							path: '/naujas-planas',
+				this.loading = true
+
+				setTimeout(() => {
+					this.$store
+						.dispatch('user/signInUser', {
+							email: data.email,
+							password: this.password,
 						})
-					} else {
-						this.$router.push(this.actionLink)
-					}
-				})
+						.then(() => {
+							this.loading = false
+							if (this.$auth.planCount === 0) {
+								this.$router.push({
+									path: '/naujas-planas',
+								})
+							} else {
+								this.$router.push(this.actionLink)
+							}
+						})
+				}, 1000)
+			} catch {
+				this.showError = true
+				this.errorText = 'Registracija nepavyko, bandykite dar kartą'
+				setTimeout(() => {
+					this.showError = false
+				}, 6000)
+			}
 		},
 	},
 }
@@ -192,6 +256,17 @@ export default {
 		border-radius: 10px;
 		padding: 10px 25px;
 	}
+}
+
+.toast {
+	position: fixed;
+	bottom: 30px;
+	background-color: $color-dark;
+	color: $color-light;
+	padding: 10px 30px;
+	left: 50%;
+	font-size: 12px;
+	transform: translateX(-50%);
 }
 
 .mode-fade-enter-active,

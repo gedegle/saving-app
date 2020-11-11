@@ -39,12 +39,21 @@ export default {
 		})
 		return data
 	},
+	async register(user) {
+		const { data } = await link.post('/user/', user)
+		return data
+	},
 	async getPlanHistory(id, page) {
 		const { data } = await link.get(`/posts/${id}/?page=${page}`)
 		return data
 	},
 	async filterPostsByDate(planId, page, date) {
 		const { data } = await link.get(`/posts/${planId}/${date}/?page=${page}`)
+		return data
+	},
+	async getPlanStats(id) {
+		const data = await link.get(`/stats/${id}`)
+
 		return data
 	},
 	updateProfile(info) {

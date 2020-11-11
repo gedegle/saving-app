@@ -55,7 +55,7 @@ class UsersController extends Controller
         $user->password = bcrypt($request->input('password'));
 
         if($user->save()){
-            return new UserResource($user);
+            return ['data' => $user];
         }
     }
 

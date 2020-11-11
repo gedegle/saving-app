@@ -1,10 +1,26 @@
 <template>
 	<div class="navigation">
 		<div class="navigation__buttons-wrapper">
-			<nuxt-link class="navigation__button" to="/pagrindinis">
+			<nuxt-link
+				class="navigation__button"
+				:to="{
+					path: '/pagrindinis',
+					query: {
+						plan: activePlan,
+					},
+				}"
+			>
 				Pagrindinis
 			</nuxt-link>
-			<nuxt-link class="navigation__button" to="/statistika">
+			<nuxt-link
+				class="navigation__button"
+				:to="{
+					path: '/statistika',
+					query: {
+						plan: activePlan,
+					},
+				}"
+			>
 				Statistika
 			</nuxt-link>
 			<nuxt-link
@@ -28,13 +44,16 @@
 <script>
 import PlansApi from '@/utils/PlansApi.js'
 import { mapGetters } from 'vuex'
+import calculateSavings from '@/mixins/calculateSavings.js'
 
 export default {
+	mixins: [calculateSavings],
 	computed: {
 		...mapGetters({
 			plans: 'user/plans',
 			activePlanIndex: 'user/activePlanIndex',
 			activePlan: 'user/activePlan',
+			activePosts: 'user/posts',
 		}),
 	},
 	methods: {
@@ -43,16 +62,25 @@ export default {
 		},
 		archivePlan() {
 			if (this.activePlanIndex === 0) {
-				this.redirectToNewPlan = true
+				PlansApi.archivePlan(this.activePlan, 0)
+				this.$router.push({
+					path: '/naujas-planas',
+				})
 				return
 			}
-			const archivePlanId = this.activePlan
+			const activePlan = this.activePlan
 			this.$store.commit(
 				'user/setActivePlan',
 				this.plans[this.activePlanIndex - 1]
 			)
-			PlansApi.archivePlan(archivePlanId, 0)
-			setTimeout(() => this.$store.dispatch('user/refetchUserData'), 700)
+			PlansApi.archivePlan(activePlan, 0)
+			setTimeout(() => {
+				this.$store.dispatch('user/refetchUserData')
+				setTimeout(
+					() => this.calculateSavings(this.plans[this.activePlanIndex]),
+					500
+				)
+			}, 700)
 		},
 	},
 }
