@@ -47,7 +47,7 @@ export const actions = {
 		await this.$auth.loginWith('local', {
 			data: { email, password },
 		})
-		if (this.$auth.user.planCount === 0) {
+		if (this.$auth.user?.planCount === 0) {
 			this.$router.push('/naujas-planas')
 		}
 		const plans = await PlanApi.getActiveUserPlans(this.$auth.user.id)
@@ -58,7 +58,7 @@ export const actions = {
 			userState.activePlan?.id,
 			this.$auth.user.id
 		)
-		dispatch('calculateSavings', plans.data[0])
+		// dispatch('calculateSavings', plans.data[0])
 
 		userState.refetchData = false
 	},

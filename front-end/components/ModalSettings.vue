@@ -74,6 +74,11 @@ export default {
 				email: this.email,
 			})
 			setTimeout(() => this.$store.dispatch('user/refetchUserData'), 1000)
+			this.$auth.setUser({
+				...this.$auth.user,
+				name: this.name,
+				email: this.email,
+			})
 			this.onClickButton()
 		},
 		changePassword() {

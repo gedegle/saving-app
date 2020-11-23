@@ -67,18 +67,18 @@ export default {
 			PlansApi.createPlan(this.sum, this.income, this.$auth.user.id).then(
 				(res) => {
 					this.loadingAfterAdded = true
+					this.$store.dispatch('user/refetchUserData')
+					this.$auth.setUser({
+						...this.$auth.user,
+						planCount: this.$auth.user.planCount + 1,
+					})
 					setTimeout(() => {
-						this.$store.dispatch('user/refetchUserData')
-						setTimeout(
-							() =>
-								this.$router.push({
-									path: '/pagrindinis',
-									query: {
-										plan: res.data.data.id,
-									},
-								}),
-							500
-						)
+						this.$router.push({
+							path: '/pagrindinis',
+							query: {
+								plan: res.data.data.id,
+							},
+						})
 					}, 1000)
 				}
 			)

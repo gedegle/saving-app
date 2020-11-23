@@ -123,6 +123,11 @@ export default {
 			}
 		},
 	},
+	mounted() {
+		if (this.$route.query.date && this.$route.query.date.length) {
+			this.selectDate(this.date)
+		}
+	},
 	methods: {
 		selectDate(date) {
 			this.$store.commit('user/selectPlanPostsDate', date)

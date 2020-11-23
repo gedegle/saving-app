@@ -19,7 +19,7 @@ export default {
 				this.$route.path === '/naujas-planas' ||
 				this.$route.path === '/archyvas' ||
 				this.$route.path === '/uzrasai' ||
-				!this.$auth.user.planCount
+				!this.$auth.user?.planCount
 			) {
 				return false
 			}
@@ -34,7 +34,7 @@ export default {
 	},
 	watch: {
 		async $route() {
-			if (this.$auth.user.planCount === 0) {
+			if (this.$auth.user?.planCount === 0) {
 				this.$router.push('naujas-planas')
 			} else if (!this.activePlanIndex) {
 				await this.$store.dispatch('user/setUser')
@@ -42,7 +42,7 @@ export default {
 		},
 	},
 	async mounted() {
-		if (this.$auth.user.planCount === 0) {
+		if (this.$auth.user?.planCount === 0) {
 			this.$router.push('naujas-planas')
 		} else if (!this.activePlanIndex) {
 			await this.$store.dispatch('user/setUser')
