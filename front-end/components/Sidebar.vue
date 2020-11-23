@@ -169,7 +169,10 @@ export default {
 			)
 		},
 		goToPage(path) {
-			if (this.plans.length < 3) {
+			if (
+				(this.plans.length < 3 && path.includes('naujas-planas')) ||
+				!path.includes('naujas-planas')
+			) {
 				this.$router.push({
 					path,
 				})

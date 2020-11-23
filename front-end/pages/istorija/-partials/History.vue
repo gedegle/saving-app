@@ -96,11 +96,11 @@ export default {
 			prevPage: 1,
 			isModalNewOpen: false,
 			postId: null,
-			date: this.$route.query.date || '',
 			type: '',
 			sum: 0,
 			toEdit: true,
 			buttonText: '',
+			date: this.$route.query.date || null,
 		}
 	},
 	computed: {
@@ -119,7 +119,7 @@ export default {
 			}
 
 			if (from.query.date) {
-				this.fetchData()
+				this.selectDate(this.date)
 			}
 		},
 	},
@@ -141,7 +141,7 @@ export default {
 		},
 		async fetchData() {
 			await PlansApi.filterPostsByDate(
-				this.activePlan,
+				this.activePlan || this.$route.query.plan,
 				parseInt(this.$route.query.page) || 1,
 				this.selectedDate
 			).then((res) => {
