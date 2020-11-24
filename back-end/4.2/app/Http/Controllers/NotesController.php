@@ -94,5 +94,8 @@ class NotesController extends Controller
 
     }
 
-
+    // public function __construct()
+    // {
+    //     $this->middleware('auth.role:admin,user');
+    // }
 }
